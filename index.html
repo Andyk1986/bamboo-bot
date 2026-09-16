@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#121826">
+  <title>Bamboo Bot 5.0</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 24px 18px 18px;
+      background: linear-gradient(135deg, #18243b, #0f172a);
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      color: #aab5c8;
+    }
+
+    main {
+      padding: 18px;
+      padding-bottom: 100px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background: #151e30;
+      border: 1px solid #26344d;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: #b9c3d3;
+      line-height: 1.5;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #36c275;
+      color: #07130c;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid #34445f;
+      background: #0d1525;
+      color: white;
+      font-size: 16px;
+    }
+
+    #reminderList {
+      margin-top: 15px;
+    }
+
+    .reminder {
+      background: #0e1728;
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background: #111827;
+      border-top: 1px solid #29364c;
+      padding: 10px 5px 18px;
+    }
+
+    nav button {
+      background: transparent;
+      color: #9eabc0;
+      font-size: 12px;
+      padding: 8px;
+    }
+
+    nav button.active {
+      color: #43d17f;
+    }
+
+    .icon {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎋 Bamboo Bot 5.0</h1>
+  <p>Dein persönlicher Alltagsassistent</p>
+</header>
+
+<main>
+
+  <section id="home" class="page active">
+    <div class="card">
+      <h2>Willkommen 👋</h2>
+      <p>Bamboo Bot 5.0 läuft erfolgreich.</p>
+    </div>
+
+    <div class="card">
+      <h2>🔔 Erinnerungen</h2>
+      <p>Erstelle und teste deine Erinnerungen.</p>
+      <button class="primary" onclick="showPage('reminders')">
+        Erinnerung erstellen
+      </button>
+    </div>
+  </section>
+
+  <section id="reminders" class="page">
+    <div class="card">
+      <h2>🔔 Erinnerungen</h2>
+
+      <input
+        id="reminderText"
+        type="text"
+        placeholder="Woran soll ich dich erinnern?"
+      >
+
+      <input
+        id="reminderTime"
+        type="datetime-local"
+      >
+
+      <button class="primary" onclick="addReminder()">
+        Erinnerung speichern
+      </button>
+
+      <div id="reminderList"></div>
+    </div>
+  </section>
+
+  <section id="assistant" class="page">
+    <div class="card">
+      <h2>🤖 Assistent</h2>
+      <p>Der Bamboo-Assistent ist bereit.</p>
+      <input id="question" placeholder="Schreibe etwas...">
+      <button class="primary" onclick="askBot()">Senden</button>
+      <p id="answer" style="margin-top:15px;"></p>
+    </div>
+  </section>
+
+  <section id="planner" class="page">
+    <div class="card">
+      <h2>📅 Planer</h2>
+      <p>Hier entsteht dein persönlicher Tages- und Terminplaner.</p>
+    </div>
+  </section>
+
+  <section id="settings" class="page">
+    <div class="card">
+      <h2>⚙️ Einstellungen</h2>
+      <p>Bamboo Bot 5.0 – Testversion</p>
+    </div>
+  </section>
+
+</main>
+
+<nav>
+  <button class="active" onclick="showPage('home', this)">
+    <span class="icon">🏠</span>
+    Start
+  </button>
+
+  <button onclick="showPage('reminders', this)">
+    <span class="icon">🔔</span>
+    Erinnerung
+  </button>
+
+  <button onclick="showPage('assistant', this)">
+    <span class="icon">🤖</span>
+    Assistent
+  </button>
+
+  <button onclick="showPage('planner', this)">
+    <span class="icon">📅</span>
+    Planer
+  </button>
+
+  <button onclick="showPage('settings', this)">
+    <span class="icon">⚙️</span>
+    Einstellungen
+  </button>
+</nav>
+
+<script>
+  function showPage(pageId, button) {
+    document.querySelectorAll(".page").forEach(page => {
+      page.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    document.querySelectorAll("nav button").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    if (button) {
+      button.classList.add("active");
+    }
+  }
+
+  function addReminder() {
+    const text = document.getElementById("reminderText").value;
+    const time = document.getElementById("reminderTime").value;
+
+    if (!text) {
+      alert("Bitte gib zuerst eine Erinnerung ein.");
+      return;
+    }
+
+    const reminders =
+      JSON.parse(localStorage.getItem("bambooReminders")) || [];
+
+    reminders.push({
+      text: text,
+      time: time
+    });
+
+    localStorage.setItem(
+      "bambooReminders",
+      JSON.stringify(reminders)
+    );
+
+    document.getElementById("reminderText").value = "";
+    document.getElementById("reminderTime").value = "";
+
+    loadReminders();
+
+    alert("Erinnerung gespeichert ✅");
+  }
+
+  function loadReminders() {
+    const list = document.getElementById("reminderList");
+
+    const reminders =
+      JSON.parse(localStorage.getItem("bambooReminders")) || [];
+
+    list.innerHTML = "";
+
+    reminders.forEach((reminder, index) => {
+      const item = document.createElement("div");
+      item.className = "reminder";
+
+      item.innerHTML =
+        "🔔 <strong>" + reminder.text + "</strong><br>" +
+        "<small>" + (reminder.time || "Keine Uhrzeit") + "</small><br>" +
+        '<button onclick="deleteReminder(' + index + ')" ' +
+        'style="margin-top:8px;background:#e75b5b;color:white;">Löschen</button>';
+
+      list.appendChild(item);
+    });
+  }
+
+  function deleteReminder(index) {
+    const reminders =
+      JSON.parse(localStorage.getItem("bambooReminders")) || [];
+
+    reminders.splice(index, 1);
+
+    localStorage.setItem(
+      "bambooReminders",
+      JSON.stringify(reminders)
+    );
+
+    loadReminders();
+  }
+
+  function askBot() {
+    const question = document.getElementById("question").value;
+
+    if (!question) return;
+
+    document.getElementById("answer").innerText =
+      "🎋 Bamboo: Deine Nachricht wurde erkannt: „" +
+      question +
+      "“";
+  }
+
+  loadReminders();
+</script>
+
+</body>
+</html>
