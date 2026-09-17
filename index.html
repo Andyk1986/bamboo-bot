@@ -1,332 +1,2962 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#121826">
-  <title>Bamboo Bot 5.0</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d6b45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<title>Bamboo Bot 7.0.3</title>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0b1020;
-      color: white;
-      min-height: 100vh;
-    }
+<style>
+:root {
+  --green:#16895b;
+  --green-dark:#0d6b45;
+  --green-light:#eaf7f0;
 
-    header {
-      padding: 24px 18px 18px;
-      background: linear-gradient(135deg, #18243b, #0f172a);
-    }
+  --bg:#f4f7f5;
+  --card:#ffffff;
+  --text:#18221d;
+  --muted:#6c7b73;
+  --line:#dde7e1;
 
-    header h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
+  --danger:#d92d20;
+  --warning:#f79009;
 
-    header p {
-      color: #aab5c8;
-    }
+  --shadow:0 8px 24px rgba(0,0,0,.07);
+}
 
-    main {
-      padding: 18px;
-      padding-bottom: 100px;
-    }
+* {
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    .page {
-      display: none;
-    }
+html,body {
+  margin:0;
+  padding:0;
+  min-height:100%;
+}
 
-    .page.active {
-      display: block;
-    }
+body {
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-    .card {
-      background: #151e30;
-      border: 1px solid #26344d;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 14px;
-    }
+button,
+input,
+select,
+textarea {
+  font:inherit;
+}
 
-    .card h2 {
-      margin-bottom: 8px;
-    }
+button {
+  cursor:pointer;
+}
 
-    .card p {
-      color: #b9c3d3;
-      line-height: 1.5;
-    }
+.app {
+  width:100%;
+  max-width:620px;
+  min-height:100vh;
+  margin:auto;
+  background:var(--bg);
+}
 
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 15px;
-      cursor: pointer;
-    }
+header {
+  color:white;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(255,255,255,.15),transparent 34%),
+    linear-gradient(135deg,#0c5b3b,#16895b);
+  padding:
+    calc(24px + env(safe-area-inset-top))
+    20px
+    24px;
+  border-radius:0 0 30px 30px;
+  box-shadow:0 10px 30px rgba(13,107,69,.18);
+}
 
-    .primary {
-      background: #36c275;
-      color: #07130c;
-      font-weight: 700;
-      margin-top: 12px;
-    }
+.logo-line {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
 
-    input {
-      width: 100%;
-      padding: 13px;
-      margin-top: 10px;
-      border-radius: 12px;
-      border: 1px solid #34445f;
-      background: #0d1525;
-      color: white;
-      font-size: 16px;
-    }
+.logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-    #reminderList {
-      margin-top: 15px;
-    }
+.logo-icon {
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:29px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.20);
+}
 
-    .reminder {
-      background: #0e1728;
-      padding: 12px;
-      border-radius: 12px;
-      margin-top: 8px;
-    }
+header h1 {
+  font-size:25px;
+  margin:0;
+}
 
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-around;
-      background: #111827;
-      border-top: 1px solid #29364c;
-      padding: 10px 5px 18px;
-    }
+.version {
+  font-size:12px;
+  opacity:.78;
+  margin-top:3px;
+}
 
-    nav button {
-      background: transparent;
-      color: #9eabc0;
-      font-size: 12px;
-      padding: 8px;
-    }
+.header-badge {
+  padding:7px 10px;
+  font-size:12px;
+  background:rgba(255,255,255,.14);
+  border-radius:99px;
+}
 
-    nav button.active {
-      color: #43d17f;
-    }
+main {
+  padding:18px 16px 110px;
+}
 
-    .icon {
-      display: block;
-      font-size: 22px;
-      margin-bottom: 3px;
-    }
-  </style>
+.page {
+  display:none;
+}
+
+.page.active {
+  display:block;
+}
+
+.hero {
+  margin-top:-1px;
+}
+
+.card {
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:17px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.card h2,
+.card h3 {
+  margin-top:0;
+}
+
+.card h2 {
+  font-size:21px;
+}
+
+.card h3 {
+  font-size:17px;
+}
+
+.greeting {
+  font-size:26px;
+  margin:0 0 4px;
+}
+
+.muted {
+  color:var(--muted);
+}
+
+.small {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-top:15px;
+}
+
+.stat-box {
+  border-radius:16px;
+  padding:14px 8px;
+  text-align:center;
+  background:var(--green-light);
+}
+
+.stat-number {
+  font-size:25px;
+  font-weight:800;
+  color:var(--green-dark);
+}
+
+.stat-label {
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+
+.quick {
+  min-height:100px;
+  border:0;
+  border-radius:20px;
+  color:white;
+  text-align:left;
+  padding:15px;
+  background:linear-gradient(135deg,#16895b,#0d6b45);
+  box-shadow:0 8px 18px rgba(13,107,69,.15);
+}
+
+.quick .icon {
+  display:block;
+  font-size:27px;
+  margin-bottom:12px;
+}
+
+.quick strong {
+  display:block;
+  font-size:16px;
+}
+
+.quick small {
+  display:block;
+  opacity:.8;
+  font-size:11px;
+  margin-top:3px;
+}
+
+input,
+select,
+textarea {
+  width:100%;
+  border:1px solid #cdd9d2;
+  border-radius:14px;
+  background:white;
+  color:var(--text);
+  padding:13px 14px;
+  margin:5px 0 11px;
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(22,137,91,.10);
+}
+
+textarea {
+  min-height:110px;
+  resize:vertical;
+}
+
+label {
+  display:block;
+  font-size:13px;
+  font-weight:650;
+  margin-top:4px;
+}
+
+.row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.row > * {
+  min-width:0;
+}
+
+.grow {
+  flex:1;
+}
+
+.btn {
+  border:0;
+  border-radius:13px;
+  padding:12px 15px;
+  font-weight:650;
+}
+
+.btn-primary {
+  background:var(--green);
+  color:white;
+}
+
+.btn-secondary {
+  background:#edf3ef;
+  color:#234235;
+}
+
+.btn-danger {
+  background:#fdeceb;
+  color:var(--danger);
+}
+
+.btn-full {
+  width:100%;
+}
+
+.item {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:14px;
+  margin-top:10px;
+}
+
+.item.done {
+  opacity:.55;
+}
+
+.item.done .item-title {
+  text-decoration:line-through;
+}
+
+.item-top {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.item-title {
+  font-weight:750;
+  font-size:15px;
+}
+
+.meta {
+  margin-top:6px;
+  color:var(--muted);
+  line-height:1.5;
+  font-size:12px;
+}
+
+.badge {
+  display:inline-block;
+  border-radius:99px;
+  padding:4px 8px;
+  font-size:10px;
+  white-space:nowrap;
+  background:var(--green-light);
+  color:var(--green-dark);
+}
+
+.actions {
+  display:flex;
+  gap:7px;
+  margin-top:11px;
+  flex-wrap:wrap;
+}
+
+.actions button {
+  border:0;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:11px;
+}
+
+.empty {
+  text-align:center;
+  padding:25px 10px;
+  color:var(--muted);
+}
+
+.section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.section-head h2,
+.section-head h3 {
+  margin:0;
+}
+
+.chips {
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  padding:3px 0 8px;
+  scrollbar-width:none;
+}
+
+.chips::-webkit-scrollbar {
+  display:none;
+}
+
+.chip {
+  border:1px solid var(--line);
+  border-radius:99px;
+  padding:8px 11px;
+  background:white;
+  color:var(--text);
+  white-space:nowrap;
+  font-size:12px;
+}
+
+.chip.active {
+  color:white;
+  background:var(--green);
+  border-color:var(--green);
+}
+
+.note-card {
+  background:#fffdf3;
+  border-color:#eee4a9;
+}
+
+.note-text {
+  white-space:pre-wrap;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.assistant-box {
+  min-height:310px;
+  max-height:48vh;
+  overflow:auto;
+  padding:6px 1px;
+}
+
+.message {
+  max-width:86%;
+  padding:12px 13px;
+  border-radius:17px;
+  margin:9px 0;
+  line-height:1.42;
+  white-space:pre-wrap;
+  font-size:14px;
+}
+
+.message.bot {
+  background:#edf2ef;
+  border-bottom-left-radius:5px;
+}
+
+.message.user {
+  margin-left:auto;
+  color:white;
+  background:var(--green);
+  border-bottom-right-radius:5px;
+}
+
+.notice {
+  padding:13px;
+  background:#fff7e6;
+  color:#754b00;
+  border:1px solid #fedf89;
+  border-radius:14px;
+  font-size:12px;
+  line-height:1.45;
+}
+
+.storage-info {
+  border-radius:14px;
+  padding:13px;
+  background:var(--green-light);
+  color:var(--green-dark);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.bottom-nav {
+  position:fixed;
+  z-index:100;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:620px;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-around;
+  padding:
+    8px
+    6px
+    calc(8px + env(safe-area-inset-bottom));
+}
+
+.nav-btn {
+  flex:1;
+  border:0;
+  background:transparent;
+  color:#6d7973;
+  border-radius:14px;
+  padding:7px 2px;
+  font-size:10px;
+}
+
+.nav-btn span {
+  display:block;
+  font-size:22px;
+  margin-bottom:2px;
+}
+
+.nav-btn.active {
+  color:var(--green-dark);
+  background:var(--green-light);
+  font-weight:700;
+}
+
+.fab {
+  position:fixed;
+  z-index:110;
+  right:max(20px,calc((100vw - 620px)/2 + 20px));
+  bottom:86px;
+  border:0;
+  border-radius:50%;
+  width:57px;
+  height:57px;
+  color:white;
+  background:var(--green);
+  font-size:30px;
+  box-shadow:0 10px 25px rgba(0,0,0,.22);
+}
+
+.modal {
+  display:none;
+  position:fixed;
+  z-index:500;
+  inset:0;
+  background:rgba(0,0,0,.43);
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.modal.open {
+  display:flex;
+}
+
+.sheet {
+  width:100%;
+  max-width:620px;
+  max-height:88vh;
+  overflow:auto;
+  border-radius:26px 26px 0 0;
+  background:var(--card);
+  padding:20px 17px calc(20px + env(safe-area-inset-bottom));
+}
+
+.sheet-handle {
+  width:50px;
+  height:5px;
+  border-radius:99px;
+  background:#ccd5d0;
+  margin:0 auto 17px;
+}
+
+.onboarding {
+  position:fixed;
+  z-index:1000;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  color:white;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.14),transparent 30%),
+    linear-gradient(145deg,#064f33,#159161);
+}
+
+.onboarding.open {
+  display:flex;
+}
+
+.onboard-box {
+  width:100%;
+  max-width:500px;
+}
+
+.onboard-logo {
+  font-size:64px;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.onboard-box h1 {
+  text-align:center;
+  margin-bottom:4px;
+}
+
+.onboard-box p {
+  text-align:center;
+  opacity:.88;
+}
+
+.onboard-box input {
+  background:rgba(255,255,255,.97);
+}
+
+.today-highlight {
+  border-left:5px solid var(--green);
+}
+
+.priority-high {
+  border-left:5px solid var(--danger);
+}
+
+.priority-medium {
+  border-left:5px solid var(--warning);
+}
+
+.priority-low {
+  border-left:5px solid var(--green);
+}
+
+.hidden {
+  display:none !important;
+}
+
+body.dark {
+  --bg:#0d1511;
+  --card:#17211c;
+  --text:#f0f6f2;
+  --muted:#a5b2ab;
+  --line:#2d3a33;
+  --green-light:#203c2f;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .item,
+body.dark .chip {
+  background:#1c2822;
+  color:var(--text);
+  border-color:#37453e;
+}
+
+body.dark .message.bot,
+body.dark .btn-secondary {
+  background:#26342d;
+  color:#f0f6f2;
+}
+
+body.dark .bottom-nav {
+  background:rgba(23,33,28,.96);
+}
+
+body.dark .note-card {
+  background:#2b291d;
+  border-color:#514b2c;
+}
+
+@media(max-width:380px) {
+  .stats {
+    grid-template-columns:1fr 1fr 1fr;
+  }
+
+  .grid {
+    grid-template-columns:1fr 1fr;
+  }
+
+  .nav-btn {
+    font-size:9px;
+  }
+}
+</style>
 </head>
 
 <body>
 
+<div class="app">
+
 <header>
-  <h1>🎋 Bamboo Bot 5.0</h1>
-  <p>Dein persönlicher Alltagsassistent</p>
+  <div class="logo-line">
+    <div class="logo">
+      <div class="logo-icon">🎋</div>
+
+      <div>
+        <h1>Bamboo Bot</h1>
+        <div class="version">Version 7.0.3</div>
+      </div>
+    </div>
+
+    <div class="header-badge">Lokal & privat</div>
+  </div>
 </header>
+
 
 <main>
 
-  <section id="home" class="page active">
-    <div class="card">
-      <h2>Willkommen 👋</h2>
-      <p>Bamboo Bot 5.0 läuft erfolgreich.</p>
-    </div>
+<!-- START -->
+<section id="home" class="page active">
 
-    <div class="card">
-      <h2>🔔 Erinnerungen</h2>
-      <p>Erstelle und teste deine Erinnerungen.</p>
-      <button class="primary" onclick="showPage('reminders')">
-        Erinnerung erstellen
+  <div class="card hero">
+    <h2 class="greeting" id="greeting">Hallo 👋</h2>
+    <div id="todayDate" class="muted"></div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-number" id="todayCount">0</div>
+        <div class="stat-label">Heute</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-number" id="taskCount">0</div>
+        <div class="stat-label">Aufgaben</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-number" id="noteCount">0</div>
+        <div class="stat-label">Notizen</div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid">
+    <button class="quick" data-go="planner">
+      <span class="icon">📅</span>
+      <strong>Planer</strong>
+      <small>Termine & Erinnerungen</small>
+    </button>
+
+    <button class="quick" data-go="tasks">
+      <span class="icon">✅</span>
+      <strong>Aufgaben</strong>
+      <small>Alles im Blick</small>
+    </button>
+
+    <button class="quick" data-go="notes">
+      <span class="icon">📝</span>
+      <strong>Notizen</strong>
+      <small>Nichts vergessen</small>
+    </button>
+
+    <button class="quick" data-go="assistant">
+      <span class="icon">🤖</span>
+      <strong>Bamboo</strong>
+      <small>Dein Assistent</small>
+    </button>
+  </div>
+
+
+  <div class="card" style="margin-top:14px">
+    <div class="section-head">
+      <h3>Heute</h3>
+      <button class="btn btn-secondary" id="homeAdd">
+        + Neu
       </button>
     </div>
-  </section>
 
-  <section id="reminders" class="page">
-    <div class="card">
-      <h2>🔔 Erinnerungen</h2>
+    <div id="todayList"></div>
+  </div>
 
-      <input
-        id="reminderText"
-        type="text"
-        placeholder="Woran soll ich dich erinnern?"
-      >
+</section>
 
-      <input
-        id="reminderTime"
-        type="datetime-local"
-      >
 
-      <button class="primary" onclick="addReminder()">
-        Erinnerung speichern
-      </button>
 
-      <div id="reminderList"></div>
-    </div>
-  </section>
+<!-- PLANER -->
+<section id="planner" class="page">
 
-  <section id="assistant" class="page">
-    <div class="card">
-      <h2>🤖 Assistent</h2>
-      <p>Der Bamboo-Assistent ist bereit.</p>
-      <input id="question" placeholder="Schreibe etwas...">
-      <button class="primary" onclick="askBot()">Senden</button>
-      <p id="answer" style="margin-top:15px;"></p>
-    </div>
-  </section>
+  <div class="card">
 
-  <section id="planner" class="page">
-    <div class="card">
+    <div class="section-head">
       <h2>📅 Planer</h2>
-      <p>Hier entsteht dein persönlicher Tages- und Terminplaner.</p>
-    </div>
-  </section>
 
-  <section id="settings" class="page">
-    <div class="card">
-      <h2>⚙️ Einstellungen</h2>
-      <p>Bamboo Bot 5.0 – Testversion</p>
+      <button class="btn btn-primary" id="plannerAdd">
+        + Neu
+      </button>
     </div>
-  </section>
+
+    <input
+      id="plannerSearch"
+      placeholder="🔎 Termine durchsuchen..."
+    >
+
+    <div class="chips">
+      <button class="chip active" data-filter="all">Alle</button>
+      <button class="chip" data-filter="today">Heute</button>
+      <button class="chip" data-filter="week">7 Tage</button>
+      <button class="chip" data-filter="open">Offen</button>
+      <button class="chip" data-filter="done">Erledigt</button>
+    </div>
+
+    <div id="plannerList"></div>
+
+  </div>
+
+</section>
+
+
+
+<!-- AUFGABEN -->
+<section id="tasks" class="page">
+
+  <div class="card">
+
+    <div class="section-head">
+      <h2>✅ Aufgaben</h2>
+
+      <button class="btn btn-primary" id="taskAdd">
+        + Aufgabe
+      </button>
+    </div>
+
+    <input
+      id="taskSearch"
+      placeholder="🔎 Aufgaben durchsuchen..."
+    >
+
+    <div id="taskList"></div>
+
+  </div>
+
+</section>
+
+
+
+<!-- NOTIZEN -->
+<section id="notes" class="page">
+
+  <div class="card">
+
+    <div class="section-head">
+      <h2>📝 Notizen</h2>
+
+      <button class="btn btn-primary" id="noteAdd">
+        + Notiz
+      </button>
+    </div>
+
+    <input
+      id="noteSearch"
+      placeholder="🔎 Notizen durchsuchen..."
+    >
+
+    <div id="noteList"></div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ASSISTENT -->
+<section id="assistant" class="page">
+
+  <div class="card">
+
+    <h2>🤖 Bamboo Assistent</h2>
+
+    <div class="notice">
+      Bamboo arbeitet in dieser Testversion lokal auf deinem Gerät.
+      Es werden keine kostenpflichtigen KI-Dienste verwendet.
+    </div>
+
+    <div id="chat" class="assistant-box">
+
+      <div class="message bot">
+Hallo! 🎋
+Ich bin Bamboo.
+
+Frag mich zum Beispiel:
+
+• „Was habe ich heute?“
+• „Wie viele Aufgaben habe ich?“
+• „Welche Termine sind offen?“
+• „Wie viele Notizen habe ich?“
+      </div>
+
+    </div>
+
+    <div class="row">
+      <input
+        id="messageInput"
+        class="grow"
+        placeholder="Nachricht schreiben..."
+      >
+
+      <button
+        id="sendMessage"
+        class="btn btn-primary">
+        Senden
+      </button>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- MEHR -->
+<section id="settings" class="page">
+
+  <div class="card">
+
+    <h2>⚙️ Einstellungen</h2>
+
+    <label>Dein Name</label>
+
+    <input
+      id="userName"
+      maxlength="50"
+      placeholder="z. B. Andreas"
+    >
+
+    <label>Darstellung</label>
+
+    <select id="themeSelect">
+      <option value="system">System</option>
+      <option value="light">Hell</option>
+      <option value="dark">Dunkel</option>
+    </select>
+
+    <button
+      id="saveSettings"
+      class="btn btn-primary btn-full">
+      Einstellungen speichern
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>🔒 Deine Daten</h3>
+
+    <div class="storage-info">
+      Bamboo Bot 7.0.3 speichert Termine, Aufgaben,
+      Notizen und Einstellungen lokal in diesem Browser.
+      Für den aktuellen Test ist kein Konto erforderlich.
+    </div>
+
+    <br>
+
+    <div class="row">
+      <button
+        id="exportData"
+        class="btn btn-secondary grow">
+        Export
+      </button>
+
+      <button
+        id="importButton"
+        class="btn btn-secondary grow">
+        Import
+      </button>
+    </div>
+
+    <input
+      id="importFile"
+      type="file"
+      accept="application/json"
+      class="hidden"
+    >
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>🧪 Testbereich</h3>
+
+    <p class="small">
+      Dieser Bereich ist für unsere iPhone-Tests gedacht.
+    </p>
+
+    <button
+      id="testStorage"
+      class="btn btn-secondary btn-full">
+      Lokalen Speicher testen
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>⚠️ Daten löschen</h3>
+
+    <p class="small">
+      Hiermit werden alle Bamboo-Daten auf diesem Gerät gelöscht.
+    </p>
+
+    <button
+      id="clearAll"
+      class="btn btn-danger btn-full">
+      Alle lokalen Daten löschen
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>Über Bamboo</h3>
+
+    <p>
+      <strong>Bamboo Bot 7.0.3</strong>
+    </p>
+
+    <p class="small">
+      Kostenlose private Testversion.
+      Für mich. Für meine Familie. Für uns.
+    </p>
+
+  </div>
+
+</section>
+
 
 </main>
 
-<nav>
-  <button class="active" onclick="showPage('home', this)">
-    <span class="icon">🏠</span>
-    Start
+
+<button
+  class="fab"
+  id="fab"
+  aria-label="Neuen Eintrag erstellen">
+  +
+</button>
+
+
+
+<nav class="bottom-nav">
+
+  <button class="nav-btn active" data-go="home">
+    <span>🏠</span>
+    Heute
   </button>
 
-  <button onclick="showPage('reminders', this)">
-    <span class="icon">🔔</span>
-    Erinnerung
-  </button>
-
-  <button onclick="showPage('assistant', this)">
-    <span class="icon">🤖</span>
-    Assistent
-  </button>
-
-  <button onclick="showPage('planner', this)">
-    <span class="icon">📅</span>
+  <button class="nav-btn" data-go="planner">
+    <span>📅</span>
     Planer
   </button>
 
-  <button onclick="showPage('settings', this)">
-    <span class="icon">⚙️</span>
-    Einstellungen
+  <button class="nav-btn" data-go="tasks">
+    <span>✅</span>
+    Aufgaben
   </button>
+
+  <button class="nav-btn" data-go="notes">
+    <span>📝</span>
+    Notizen
+  </button>
+
+  <button class="nav-btn" data-go="settings">
+    <span>⚙️</span>
+    Mehr
+  </button>
+
 </nav>
 
+</div>
+
+
+
+<!-- NEUER TERMIN -->
+<div class="modal" id="entryModal">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="section-head">
+      <h2>Neuer Eintrag</h2>
+
+      <button
+        class="btn btn-secondary"
+        data-close="entryModal">
+        ✕
+      </button>
+    </div>
+
+    <label>Typ</label>
+
+    <select id="entryType">
+      <option value="Termin">📅 Termin</option>
+      <option value="Erinnerung">🔔 Erinnerung</option>
+      <option value="Medikament">💊 Medikament</option>
+      <option value="Einkauf">🛒 Einkauf</option>
+      <option value="Telefonat">☎️ Telefonat</option>
+      <option value="Familie">👨‍👩‍👧 Familie</option>
+      <option value="Arbeit">💼 Arbeit</option>
+      <option value="Haustier">🐾 Haustier</option>
+    </select>
+
+    <label>Titel</label>
+
+    <input
+      id="entryTitle"
+      maxlength="100"
+      placeholder="Was steht an?"
+    >
+
+    <div class="row">
+
+      <div class="grow">
+        <label>Datum</label>
+        <input id="entryDate" type="date">
+      </div>
+
+      <div class="grow">
+        <label>Uhrzeit</label>
+        <input id="entryTime" type="time">
+      </div>
+
+    </div>
+
+    <label>Ort / Adresse</label>
+
+    <input
+      id="entryPlace"
+      maxlength="150"
+      placeholder="Optional"
+    >
+
+    <label>Fahrzeit in Minuten</label>
+
+    <input
+      id="entryTravel"
+      type="number"
+      min="0"
+      max="600"
+      placeholder="Optional"
+    >
+
+    <label>Priorität</label>
+
+    <select id="entryPriority">
+      <option value="low">Niedrig</option>
+      <option value="medium" selected>Normal</option>
+      <option value="high">Wichtig</option>
+    </select>
+
+    <button
+      id="saveEntry"
+      class="btn btn-primary btn-full">
+      Speichern
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- NEUE AUFGABE -->
+<div class="modal" id="taskModal">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="section-head">
+      <h2>Neue Aufgabe</h2>
+
+      <button
+        class="btn btn-secondary"
+        data-close="taskModal">
+        ✕
+      </button>
+    </div>
+
+    <label>Aufgabe</label>
+
+    <input
+      id="taskTitleInput"
+      maxlength="120"
+      placeholder="Was möchtest du erledigen?"
+    >
+
+    <label>Fällig am</label>
+
+    <input
+      id="taskDateInput"
+      type="date"
+    >
+
+    <label>Priorität</label>
+
+    <select id="taskPriorityInput">
+      <option value="low">Niedrig</option>
+      <option value="medium" selected>Normal</option>
+      <option value="high">Wichtig</option>
+    </select>
+
+    <button
+      id="saveTask"
+      class="btn btn-primary btn-full">
+      Aufgabe speichern
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- NEUE NOTIZ -->
+<div class="modal" id="noteModal">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="section-head">
+      <h2>Neue Notiz</h2>
+
+      <button
+        class="btn btn-secondary"
+        data-close="noteModal">
+        ✕
+      </button>
+    </div>
+
+    <label>Titel</label>
+
+    <input
+      id="noteTitleInput"
+      maxlength="100"
+      placeholder="Titel der Notiz"
+    >
+
+    <label>Notiz</label>
+
+    <textarea
+      id="noteTextInput"
+      maxlength="3000"
+      placeholder="Schreib deine Notiz..."
+    ></textarea>
+
+    <button
+      id="saveNote"
+      class="btn btn-primary btn-full">
+      Notiz speichern
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ONBOARDING -->
+<div class="onboarding" id="onboarding">
+
+  <div class="onboard-box">
+
+    <div class="onboard-logo">🎋🤖</div>
+
+    <h1>Bamboo Bot 7.0.3</h1>
+
+    <p>
+      Dein persönlicher digitaler Assistent.
+      <br><br>
+      Organisieren. Planen. Erinnern.
+      <br>
+      Privat auf deinem Gerät.
+    </p>
+
+    <input
+      id="onboardingName"
+      placeholder="Wie heißt du?"
+    >
+
+    <button
+      id="finishOnboarding"
+      class="btn btn-primary btn-full">
+      Bamboo starten
+    </button>
+
+  </div>
+
+</div>
+
+
+
 <script>
-  function showPage(pageId, button) {
-    document.querySelectorAll(".page").forEach(page => {
-      page.classList.remove("active");
-    });
+"use strict";
 
-    document.getElementById(pageId).classList.add("active");
+const VERSION = "7.0.3";
 
-    document.querySelectorAll("nav button").forEach(btn => {
-      btn.classList.remove("active");
-    });
+const STORAGE_KEY = "bamboo_bot_703_data";
 
-    if (button) {
-      button.classList.add("active");
-    }
+let state = {
+  version: VERSION,
+  settings: {
+    name: "",
+    theme: "system",
+    onboarded: false
+  },
+  entries: [],
+  tasks: [],
+  notes: []
+};
+
+let plannerFilter = "all";
+
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+
+function uid() {
+  if (
+    window.crypto &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
   }
 
-  function addReminder() {
-    const text = document.getElementById("reminderText").value;
-    const time = document.getElementById("reminderTime").value;
+  return (
+    Date.now().toString(36) +
+    Math.random().toString(36).slice(2)
+  );
+}
 
-    if (!text) {
-      alert("Bitte gib zuerst eine Erinnerung ein.");
+
+function esc(value) {
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function localDate(date = new Date()) {
+
+  const year = date.getFullYear();
+
+  const month =
+    String(date.getMonth() + 1).padStart(2,"0");
+
+  const day =
+    String(date.getDate()).padStart(2,"0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+function save() {
+
+  state.version = VERSION;
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(state)
+  );
+}
+
+
+function load() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(STORAGE_KEY);
+
+    if (!raw) return;
+
+    const data = JSON.parse(raw);
+
+    if (data && typeof data === "object") {
+
+      state = {
+        version: VERSION,
+
+        settings: {
+          name:
+            data.settings?.name || "",
+
+          theme:
+            data.settings?.theme || "system",
+
+          onboarded:
+            Boolean(
+              data.settings?.onboarded
+            )
+        },
+
+        entries:
+          Array.isArray(data.entries)
+          ? data.entries
+          : [],
+
+        tasks:
+          Array.isArray(data.tasks)
+          ? data.tasks
+          : [],
+
+        notes:
+          Array.isArray(data.notes)
+          ? data.notes
+          : []
+      };
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Bamboo konnte lokale Daten nicht laden:",
+      error
+    );
+  }
+}
+
+
+function applyTheme() {
+
+  const theme =
+    state.settings.theme || "system";
+
+  let dark = false;
+
+  if (theme === "dark") {
+    dark = true;
+  }
+
+  if (
+    theme === "system" &&
+    window.matchMedia &&
+    window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+  ) {
+    dark = true;
+  }
+
+  document.body.classList.toggle(
+    "dark",
+    dark
+  );
+}
+
+
+function go(pageId) {
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page => {
+
+      page.classList.toggle(
+        "active",
+        page.id === pageId
+      );
+    });
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.go === pageId
+      );
+    });
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  render();
+}
+
+
+function openModal(id) {
+
+  $(id).classList.add("open");
+}
+
+
+function closeModal(id) {
+
+  $(id).classList.remove("open");
+}
+
+
+function formatDate(dateValue) {
+
+  if (!dateValue) {
+    return "Ohne Datum";
+  }
+
+  const date =
+    new Date(
+      dateValue + "T12:00:00"
+    );
+
+  return date.toLocaleDateString(
+    "de-DE",
+    {
+      weekday:"short",
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric"
+    }
+  );
+}
+
+
+function entryDateTime(entry) {
+
+  if (!entry.date) {
+    return new Date("2999-12-31");
+  }
+
+  return new Date(
+    entry.date +
+    "T" +
+    (entry.time || "23:59")
+  );
+}
+
+
+function departureTime(entry) {
+
+  if (
+    !entry.date ||
+    !entry.time ||
+    !entry.travel
+  ) {
+    return "";
+  }
+
+  const date =
+    entryDateTime(entry);
+
+  date.setMinutes(
+    date.getMinutes() -
+    Number(entry.travel)
+  );
+
+  return date.toLocaleTimeString(
+    "de-DE",
+    {
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+}
+
+
+function entryIcon(type) {
+
+  const icons = {
+    Termin:"📅",
+    Erinnerung:"🔔",
+    Medikament:"💊",
+    Einkauf:"🛒",
+    Telefonat:"☎️",
+    Familie:"👨‍👩‍👧",
+    Arbeit:"💼",
+    Haustier:"🐾"
+  };
+
+  return icons[type] || "📌";
+}
+
+
+function renderEntry(entry) {
+
+  const departure =
+    departureTime(entry);
+
+  return `
+    <div
+      class="item
+      ${entry.done ? "done" : ""}
+      priority-${esc(
+        entry.priority || "medium"
+      )}"
+    >
+
+      <div class="item-top">
+
+        <div class="item-title">
+          ${entryIcon(entry.type)}
+          ${esc(entry.title)}
+        </div>
+
+        <span class="badge">
+          ${esc(entry.type)}
+        </span>
+
+      </div>
+
+      <div class="meta">
+
+        📅 ${esc(
+          formatDate(entry.date)
+        )}
+
+        ${
+          entry.time
+          ? ` · 🕒 ${esc(entry.time)} Uhr`
+          : ""
+        }
+
+        ${
+          entry.place
+          ? `<br>📍 ${esc(entry.place)}`
+          : ""
+        }
+
+        ${
+          entry.travel
+          ? `<br>🚗 Fahrzeit: ${esc(entry.travel)} Min.`
+          : ""
+        }
+
+        ${
+          departure
+          ? `<br><strong>⏰ Empfohlene Abfahrt:
+              ${esc(departure)} Uhr</strong>`
+          : ""
+        }
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="btn-secondary"
+          onclick="toggleEntry('${entry.id}')"
+        >
+          ${
+            entry.done
+            ? "↩ Wieder öffnen"
+            : "✓ Erledigt"
+          }
+        </button>
+
+        <button
+          class="btn-danger"
+          onclick="deleteEntry('${entry.id}')"
+        >
+          🗑 Löschen
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+function renderTask(task) {
+
+  return `
+    <div
+      class="item
+      ${task.done ? "done" : ""}
+      priority-${esc(
+        task.priority || "medium"
+      )}"
+    >
+
+      <div class="item-top">
+
+        <div class="item-title">
+          ✅ ${esc(task.title)}
+        </div>
+
+        ${
+          task.date
+          ? `<span class="badge">
+               ${esc(formatDate(task.date))}
+             </span>`
+          : ""
+        }
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="btn-secondary"
+          onclick="toggleTask('${task.id}')"
+        >
+          ${
+            task.done
+            ? "↩ Wieder öffnen"
+            : "✓ Erledigt"
+          }
+        </button>
+
+        <button
+          class="btn-danger"
+          onclick="deleteTask('${task.id}')"
+        >
+          🗑 Löschen
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+function renderNote(note) {
+
+  return `
+    <div class="item note-card">
+
+      <div class="item-top">
+
+        <div class="item-title">
+          📝 ${esc(note.title)}
+        </div>
+
+        <span class="badge">
+          ${esc(
+            new Date(
+              note.created
+            ).toLocaleDateString("de-DE")
+          )}
+        </span>
+
+      </div>
+
+      <div class="note-text">
+        ${esc(note.text)}
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="btn-danger"
+          onclick="deleteNote('${note.id}')"
+        >
+          🗑 Löschen
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+function renderHome() {
+
+  const now = new Date();
+
+  const today = localDate(now);
+
+  const name =
+    state.settings.name;
+
+  $("greeting").textContent =
+    name
+    ? `Hallo, ${name} 👋`
+    : "Hallo 👋";
+
+  $("todayDate").textContent =
+    now.toLocaleDateString(
+      "de-DE",
+      {
+        weekday:"long",
+        day:"2-digit",
+        month:"long",
+        year:"numeric"
+      }
+    );
+
+  const todayEntries =
+    state.entries
+      .filter(
+        entry =>
+          !entry.done &&
+          entry.date === today
+      )
+      .sort(
+        (a,b) =>
+          entryDateTime(a) -
+          entryDateTime(b)
+      );
+
+  $("todayCount").textContent =
+    todayEntries.length;
+
+  $("taskCount").textContent =
+    state.tasks.filter(
+      task => !task.done
+    ).length;
+
+  $("noteCount").textContent =
+    state.notes.length;
+
+  $("todayList").innerHTML =
+    todayEntries.length
+    ? todayEntries
+        .map(renderEntry)
+        .join("")
+    : `
+      <div class="empty">
+        🎋 Für heute ist nichts eingetragen.
+      </div>
+    `;
+}
+
+
+function plannerEntries() {
+
+  const query =
+    $("plannerSearch").value
+      .trim()
+      .toLowerCase();
+
+  const today =
+    localDate();
+
+  const end =
+    new Date();
+
+  end.setDate(
+    end.getDate() + 7
+  );
+
+  const endDate =
+    localDate(end);
+
+  return state.entries
+
+    .filter(entry => {
+
+      const text = [
+        entry.title,
+        entry.type,
+        entry.place,
+        entry.date
+      ]
+      .join(" ")
+      .toLowerCase();
+
+      if (
+        query &&
+        !text.includes(query)
+      ) {
+        return false;
+      }
+
+      if (
+        plannerFilter === "today"
+      ) {
+        return entry.date === today;
+      }
+
+      if (
+        plannerFilter === "week"
+      ) {
+        return (
+          entry.date >= today &&
+          entry.date <= endDate
+        );
+      }
+
+      if (
+        plannerFilter === "open"
+      ) {
+        return !entry.done;
+      }
+
+      if (
+        plannerFilter === "done"
+      ) {
+        return entry.done;
+      }
+
+      return true;
+    })
+
+    .sort(
+      (a,b) => {
+
+        if (
+          Boolean(a.done) !==
+          Boolean(b.done)
+        ) {
+          return (
+            Number(a.done) -
+            Number(b.done)
+          );
+        }
+
+        return (
+          entryDateTime(a) -
+          entryDateTime(b)
+        );
+      }
+    );
+}
+
+
+function renderPlanner() {
+
+  const entries =
+    plannerEntries();
+
+  $("plannerList").innerHTML =
+    entries.length
+    ? entries
+        .map(renderEntry)
+        .join("")
+    : `
+      <div class="empty">
+        Keine passenden Einträge gefunden.
+      </div>
+    `;
+}
+
+
+function renderTasks() {
+
+  const query =
+    $("taskSearch").value
+      .trim()
+      .toLowerCase();
+
+  const tasks =
+    [...state.tasks]
+
+      .filter(task =>
+        task.title
+          .toLowerCase()
+          .includes(query)
+      )
+
+      .sort(
+        (a,b) => {
+
+          if (
+            Boolean(a.done) !==
+            Boolean(b.done)
+          ) {
+            return (
+              Number(a.done) -
+              Number(b.done)
+            );
+          }
+
+          return (
+            (a.date || "9999") >
+            (b.date || "9999")
+            ? 1
+            : -1
+          );
+        }
+      );
+
+  $("taskList").innerHTML =
+    tasks.length
+    ? tasks
+        .map(renderTask)
+        .join("")
+    : `
+      <div class="empty">
+        Noch keine Aufgaben vorhanden.
+      </div>
+    `;
+}
+
+
+function renderNotes() {
+
+  const query =
+    $("noteSearch").value
+      .trim()
+      .toLowerCase();
+
+  const notes =
+    [...state.notes]
+
+      .filter(note =>
+        (
+          note.title +
+          " " +
+          note.text
+        )
+        .toLowerCase()
+        .includes(query)
+      )
+
+      .sort(
+        (a,b) =>
+          b.created - a.created
+      );
+
+  $("noteList").innerHTML =
+    notes.length
+    ? notes
+        .map(renderNote)
+        .join("")
+    : `
+      <div class="empty">
+        Noch keine Notizen vorhanden.
+      </div>
+    `;
+}
+
+
+function renderSettings() {
+
+  $("userName").value =
+    state.settings.name || "";
+
+  $("themeSelect").value =
+    state.settings.theme || "system";
+}
+
+
+function render() {
+
+  renderHome();
+  renderPlanner();
+  renderTasks();
+  renderNotes();
+  renderSettings();
+}
+
+
+window.toggleEntry =
+function(id) {
+
+  const entry =
+    state.entries.find(
+      item => item.id === id
+    );
+
+  if (!entry) return;
+
+  entry.done = !entry.done;
+
+  save();
+  render();
+};
+
+
+window.deleteEntry =
+function(id) {
+
+  const entry =
+    state.entries.find(
+      item => item.id === id
+    );
+
+  if (!entry) return;
+
+  if (
+    !confirm(
+      `„${entry.title}“ wirklich löschen?`
+    )
+  ) {
+    return;
+  }
+
+  state.entries =
+    state.entries.filter(
+      item => item.id !== id
+    );
+
+  save();
+  render();
+};
+
+
+window.toggleTask =
+function(id) {
+
+  const task =
+    state.tasks.find(
+      item => item.id === id
+    );
+
+  if (!task) return;
+
+  task.done = !task.done;
+
+  save();
+  render();
+};
+
+
+window.deleteTask =
+function(id) {
+
+  const task =
+    state.tasks.find(
+      item => item.id === id
+    );
+
+  if (!task) return;
+
+  if (
+    !confirm(
+      `„${task.title}“ wirklich löschen?`
+    )
+  ) {
+    return;
+  }
+
+  state.tasks =
+    state.tasks.filter(
+      item => item.id !== id
+    );
+
+  save();
+  render();
+};
+
+
+window.deleteNote =
+function(id) {
+
+  const note =
+    state.notes.find(
+      item => item.id === id
+    );
+
+  if (!note) return;
+
+  if (
+    !confirm(
+      `Notiz „${note.title}“ wirklich löschen?`
+    )
+  ) {
+    return;
+  }
+
+  state.notes =
+    state.notes.filter(
+      item => item.id !== id
+    );
+
+  save();
+  render();
+};
+
+
+function prepareEntryModal() {
+
+  $("entryTitle").value = "";
+
+  $("entryDate").value =
+    localDate();
+
+  $("entryTime").value = "";
+
+  $("entryPlace").value = "";
+
+  $("entryTravel").value = "";
+
+  $("entryPriority").value =
+    "medium";
+
+  $("entryType").value =
+    "Termin";
+
+  openModal("entryModal");
+}
+
+
+function prepareTaskModal() {
+
+  $("taskTitleInput").value = "";
+
+  $("taskDateInput").value =
+    localDate();
+
+  $("taskPriorityInput").value =
+    "medium";
+
+  openModal("taskModal");
+}
+
+
+function prepareNoteModal() {
+
+  $("noteTitleInput").value = "";
+
+  $("noteTextInput").value = "";
+
+  openModal("noteModal");
+}
+
+
+$("saveEntry")
+.addEventListener(
+  "click",
+  () => {
+
+    const title =
+      $("entryTitle")
+        .value
+        .trim();
+
+    const date =
+      $("entryDate").value;
+
+    if (!title) {
+      alert(
+        "Bitte gib einen Titel ein."
+      );
       return;
     }
 
-    const reminders =
-      JSON.parse(localStorage.getItem("bambooReminders")) || [];
+    if (!date) {
+      alert(
+        "Bitte wähle ein Datum."
+      );
+      return;
+    }
 
-    reminders.push({
-      text: text,
-      time: time
+    state.entries.push({
+      id:uid(),
+      title,
+      type:$("entryType").value,
+      date,
+      time:$("entryTime").value,
+      place:
+        $("entryPlace")
+          .value
+          .trim(),
+      travel:
+        $("entryTravel").value,
+      priority:
+        $("entryPriority").value,
+      done:false,
+      created:Date.now()
     });
 
-    localStorage.setItem(
-      "bambooReminders",
-      JSON.stringify(reminders)
-    );
+    save();
 
-    document.getElementById("reminderText").value = "";
-    document.getElementById("reminderTime").value = "";
+    closeModal("entryModal");
 
-    loadReminders();
+    render();
 
-    alert("Erinnerung gespeichert ✅");
+    go("planner");
   }
+);
 
-  function loadReminders() {
-    const list = document.getElementById("reminderList");
 
-    const reminders =
-      JSON.parse(localStorage.getItem("bambooReminders")) || [];
+$("saveTask")
+.addEventListener(
+  "click",
+  () => {
 
-    list.innerHTML = "";
+    const title =
+      $("taskTitleInput")
+        .value
+        .trim();
 
-    reminders.forEach((reminder, index) => {
-      const item = document.createElement("div");
-      item.className = "reminder";
+    if (!title) {
+      alert(
+        "Bitte gib eine Aufgabe ein."
+      );
+      return;
+    }
 
-      item.innerHTML =
-        "🔔 <strong>" + reminder.text + "</strong><br>" +
-        "<small>" + (reminder.time || "Keine Uhrzeit") + "</small><br>" +
-        '<button onclick="deleteReminder(' + index + ')" ' +
-        'style="margin-top:8px;background:#e75b5b;color:white;">Löschen</button>';
-
-      list.appendChild(item);
+    state.tasks.push({
+      id:uid(),
+      title,
+      date:
+        $("taskDateInput").value,
+      priority:
+        $("taskPriorityInput").value,
+      done:false,
+      created:Date.now()
     });
+
+    save();
+
+    closeModal("taskModal");
+
+    render();
+
+    go("tasks");
   }
+);
 
-  function deleteReminder(index) {
-    const reminders =
-      JSON.parse(localStorage.getItem("bambooReminders")) || [];
 
-    reminders.splice(index, 1);
+$("saveNote")
+.addEventListener(
+  "click",
+  () => {
 
-    localStorage.setItem(
-      "bambooReminders",
-      JSON.stringify(reminders)
+    const title =
+      $("noteTitleInput")
+        .value
+        .trim();
+
+    const text =
+      $("noteTextInput")
+        .value
+        .trim();
+
+    if (
+      !title &&
+      !text
+    ) {
+      alert(
+        "Bitte gib eine Notiz ein."
+      );
+      return;
+    }
+
+    state.notes.push({
+      id:uid(),
+      title:
+        title || "Notiz",
+      text,
+      created:Date.now()
+    });
+
+    save();
+
+    closeModal("noteModal");
+
+    render();
+
+    go("notes");
+  }
+);
+
+
+$("saveSettings")
+.addEventListener(
+  "click",
+  () => {
+
+    state.settings.name =
+      $("userName")
+        .value
+        .trim();
+
+    state.settings.theme =
+      $("themeSelect").value;
+
+    save();
+
+    applyTheme();
+
+    render();
+
+    alert(
+      "Einstellungen gespeichert."
+    );
+  }
+);
+
+
+function assistantReply(text) {
+
+  const query =
+    text
+      .trim()
+      .toLowerCase();
+
+  const today =
+    localDate();
+
+  const todayEntries =
+    state.entries.filter(
+      entry =>
+        !entry.done &&
+        entry.date === today
     );
 
-    loadReminders();
+  const openEntries =
+    state.entries.filter(
+      entry => !entry.done
+    );
+
+  const openTasks =
+    state.tasks.filter(
+      task => !task.done
+    );
+
+  if (
+    query.includes("hallo") ||
+    query === "hi" ||
+    query === "hey"
+  ) {
+    return state.settings.name
+      ? `Hallo ${state.settings.name}! 🎋 Was möchtest du wissen?`
+      : "Hallo! 🎋 Was möchtest du wissen?";
   }
 
-  function askBot() {
-    const question = document.getElementById("question").value;
+  if (
+    query.includes("heute")
+  ) {
 
-    if (!question) return;
+    if (!todayEntries.length) {
+      return "Für heute ist aktuell nichts eingetragen. 🎋";
+    }
 
-    document.getElementById("answer").innerText =
-      "🎋 Bamboo: Deine Nachricht wurde erkannt: „" +
-      question +
-      "“";
+    return (
+      `Heute hast du ${todayEntries.length} offene Einträge:\n\n` +
+      todayEntries
+        .map(entry =>
+          `• ${entry.time ? entry.time + " Uhr – " : ""}${entry.title}`
+        )
+        .join("\n")
+    );
   }
 
-  loadReminders();
+  if (
+    query.includes("aufgabe")
+  ) {
+    return (
+      `Du hast aktuell ${openTasks.length} offene Aufgaben.`
+    );
+  }
+
+  if (
+    query.includes("termin") ||
+    query.includes("erinner")
+  ) {
+    return (
+      `Du hast aktuell ${openEntries.length} offene Termine und Erinnerungen.`
+    );
+  }
+
+  if (
+    query.includes("notiz")
+  ) {
+    return (
+      `Du hast ${state.notes.length} gespeicherte Notizen.`
+    );
+  }
+
+  if (
+    query.includes("version")
+  ) {
+    return (
+      `Du nutzt Bamboo Bot ${VERSION}.`
+    );
+  }
+
+  return (
+    "Ich kann in dieser kostenlosen lokalen Testversion deine Termine, Aufgaben und Notizen auswerten. Frag mich zum Beispiel: „Was habe ich heute?“"
+  );
+}
+
+
+function addChatMessage(
+  text,
+  who
+) {
+
+  const message =
+    document.createElement("div");
+
+  message.className =
+    `message ${who}`;
+
+  message.textContent =
+    text;
+
+  $("chat")
+    .appendChild(message);
+
+  $("chat").scrollTop =
+    $("chat").scrollHeight;
+}
+
+
+function sendChat() {
+
+  const input =
+    $("messageInput");
+
+  const text =
+    input.value.trim();
+
+  if (!text) return;
+
+  addChatMessage(
+    text,
+    "user"
+  );
+
+  input.value = "";
+
+  setTimeout(
+    () => {
+
+      addChatMessage(
+        assistantReply(text),
+        "bot"
+      );
+
+    },
+    200
+  );
+}
+
+
+$("sendMessage")
+.addEventListener(
+  "click",
+  sendChat
+);
+
+
+$("messageInput")
+.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendChat();
+    }
+  }
+);
+
+
+$("exportData")
+.addEventListener(
+  "click",
+  () => {
+
+    const data =
+      JSON.stringify(
+        state,
+        null,
+        2
+      );
+
+    const blob =
+      new Blob(
+        [data],
+        {
+          type:"application/json"
+        }
+      );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+      `bamboo-bot-${VERSION}-backup.json`;
+
+    link.click();
+
+    setTimeout(
+      () =>
+        URL.revokeObjectURL(url),
+      1000
+    );
+  }
+);
+
+
+$("importButton")
+.addEventListener(
+  "click",
+  () =>
+    $("importFile").click()
+);
+
+
+$("importFile")
+.addEventListener(
+  "change",
+  async event => {
+
+    try {
+
+      const file =
+        event.target.files[0];
+
+      if (!file) return;
+
+      const text =
+        await file.text();
+
+      const data =
+        JSON.parse(text);
+
+      if (
+        !data ||
+        typeof data !== "object"
+      ) {
+        throw new Error();
+      }
+
+      state = {
+        version:VERSION,
+
+        settings:{
+          name:
+            data.settings?.name || "",
+
+          theme:
+            data.settings?.theme || "system",
+
+          onboarded:true
+        },
+
+        entries:
+          Array.isArray(data.entries)
+          ? data.entries
+          : [],
+
+        tasks:
+          Array.isArray(data.tasks)
+          ? data.tasks
+          : [],
+
+        notes:
+          Array.isArray(data.notes)
+          ? data.notes
+          : []
+      };
+
+      save();
+
+      applyTheme();
+
+      render();
+
+      alert(
+        "Bamboo-Daten wurden erfolgreich importiert."
+      );
+
+    } catch (error) {
+
+      alert(
+        "Die Sicherungsdatei konnte nicht gelesen werden."
+      );
+    }
+
+    event.target.value = "";
+  }
+);
+
+
+$("testStorage")
+.addEventListener(
+  "click",
+  () => {
+
+    const testKey =
+      "bamboo_storage_test";
+
+    try {
+
+      localStorage.setItem(
+        testKey,
+        "PASS"
+      );
+
+      const result =
+        localStorage.getItem(
+          testKey
+        );
+
+      localStorage.removeItem(
+        testKey
+      );
+
+      if (
+        result === "PASS"
+      ) {
+        alert(
+          "PASS ✅\n\nDer lokale Speicher funktioniert."
+        );
+      } else {
+        alert(
+          "FAIL ❌\n\nDer lokale Speicher funktioniert nicht korrekt."
+        );
+      }
+
+    } catch (error) {
+
+      alert(
+        "FAIL ❌\n\nDer lokale Speicher ist nicht verfügbar."
+      );
+    }
+  }
+);
+
+
+$("clearAll")
+.addEventListener(
+  "click",
+  () => {
+
+    const first =
+      confirm(
+        "Wirklich ALLE Bamboo-Daten auf diesem Gerät löschen?"
+      );
+
+    if (!first) return;
+
+    const second =
+      confirm(
+        "Letzte Bestätigung:\n\nTermine, Aufgaben, Notizen und Einstellungen werden dauerhaft gelöscht."
+      );
+
+    if (!second) return;
+
+    localStorage.removeItem(
+      STORAGE_KEY
+    );
+
+    state = {
+      version:VERSION,
+
+      settings:{
+        name:"",
+        theme:"system",
+        onboarded:false
+      },
+
+      entries:[],
+      tasks:[],
+      notes:[]
+    };
+
+    applyTheme();
+
+    render();
+
+    $("onboarding")
+      .classList.add("open");
+  }
+);
+
+
+$("finishOnboarding")
+.addEventListener(
+  "click",
+  () => {
+
+    state.settings.name =
+      $("onboardingName")
+        .value
+        .trim();
+
+    state.settings.onboarded =
+      true;
+
+    save();
+
+    $("onboarding")
+      .classList.remove("open");
+
+    render();
+  }
+);
+
+
+document
+.querySelectorAll("[data-go]")
+.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      () =>
+        go(button.dataset.go)
+    );
+  }
+);
+
+
+document
+.querySelectorAll("[data-close]")
+.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      () =>
+        closeModal(
+          button.dataset.close
+        )
+    );
+  }
+);
+
+
+document
+.querySelectorAll(".modal")
+.forEach(
+  modal => {
+
+    modal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === modal
+        ) {
+          modal.classList.remove(
+            "open"
+          );
+        }
+      }
+    );
+  }
+);
+
+
+document
+.querySelectorAll("[data-filter]")
+.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        plannerFilter =
+          button.dataset.filter;
+
+        document
+          .querySelectorAll(
+            "[data-filter]"
+          )
+          .forEach(
+            item =>
+              item.classList.remove(
+                "active"
+              )
+          );
+
+        button.classList.add(
+          "active"
+        );
+
+        renderPlanner();
+      }
+    );
+  }
+);
+
+
+$("plannerSearch")
+.addEventListener(
+  "input",
+  renderPlanner
+);
+
+
+$("taskSearch")
+.addEventListener(
+  "input",
+  renderTasks
+);
+
+
+$("noteSearch")
+.addEventListener(
+  "input",
+  renderNotes
+);
+
+
+$("fab")
+.addEventListener(
+  "click",
+  prepareEntryModal
+);
+
+
+$("homeAdd")
+.addEventListener(
+  "click",
+  prepareEntryModal
+);
+
+
+$("plannerAdd")
+.addEventListener(
+  "click",
+  prepareEntryModal
+);
+
+
+$("taskAdd")
+.addEventListener(
+  "click",
+  prepareTaskModal
+);
+
+
+$("noteAdd")
+.addEventListener(
+  "click",
+  prepareNoteModal
+);
+
+
+load();
+
+applyTheme();
+
+render();
+
+$("entryDate").value =
+  localDate();
+
+$("taskDateInput").value =
+  localDate();
+
+
+if (
+  !state.settings.onboarded
+) {
+  $("onboarding")
+    .classList.add("open");
+}
+
+
+if (
+  window.matchMedia
+) {
+
+  window
+    .matchMedia(
+      "(prefers-color-scheme: dark)"
+    )
+    .addEventListener?.(
+      "change",
+      () => {
+
+        if (
+          state.settings.theme ===
+          "system"
+        ) {
+          applyTheme();
+        }
+      }
+    );
+}
+
+
+console.log(
+  `Bamboo Bot ${VERSION} gestartet.`
+);
 </script>
 
 </body>
