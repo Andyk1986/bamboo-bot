@@ -1,2963 +1,1348 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0d6b45">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#04130e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<title>Bamboo Bot 7.0.3</title>
-
+<meta name="apple-mobile-web-app-title" content="Bamboo Bot">
+<title>Bamboo Bot 8.0</title>
 <style>
-:root {
-  --green:#16895b;
-  --green-dark:#0d6b45;
-  --green-light:#eaf7f0;
-
-  --bg:#f4f7f5;
-  --card:#ffffff;
-  --text:#18221d;
-  --muted:#6c7b73;
-  --line:#dde7e1;
-
-  --danger:#d92d20;
-  --warning:#f79009;
-
-  --shadow:0 8px 24px rgba(0,0,0,.07);
-}
-
-* {
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,body {
-  margin:0;
-  padding:0;
-  min-height:100%;
-}
-
-body {
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-button,
-input,
-select,
-textarea {
-  font:inherit;
-}
-
-button {
-  cursor:pointer;
-}
-
-.app {
-  width:100%;
-  max-width:620px;
-  min-height:100vh;
-  margin:auto;
-  background:var(--bg);
-}
-
-header {
-  color:white;
-  background:
-    radial-gradient(circle at 100% 0%,rgba(255,255,255,.15),transparent 34%),
-    linear-gradient(135deg,#0c5b3b,#16895b);
-  padding:
-    calc(24px + env(safe-area-inset-top))
-    20px
-    24px;
-  border-radius:0 0 30px 30px;
-  box-shadow:0 10px 30px rgba(13,107,69,.18);
-}
-
-.logo-line {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.logo {
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.logo-icon {
-  width:48px;
-  height:48px;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:29px;
-  background:rgba(255,255,255,.15);
-  border:1px solid rgba(255,255,255,.20);
-}
-
-header h1 {
-  font-size:25px;
-  margin:0;
-}
-
-.version {
-  font-size:12px;
-  opacity:.78;
-  margin-top:3px;
-}
-
-.header-badge {
-  padding:7px 10px;
-  font-size:12px;
-  background:rgba(255,255,255,.14);
-  border-radius:99px;
-}
-
-main {
-  padding:18px 16px 110px;
-}
-
-.page {
-  display:none;
-}
-
-.page.active {
-  display:block;
-}
-
-.hero {
-  margin-top:-1px;
-}
-
-.card {
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:17px;
-  margin-bottom:14px;
-  box-shadow:var(--shadow);
-}
-
-.card h2,
-.card h3 {
-  margin-top:0;
-}
-
-.card h2 {
-  font-size:21px;
-}
-
-.card h3 {
-  font-size:17px;
-}
-
-.greeting {
-  font-size:26px;
-  margin:0 0 4px;
-}
-
-.muted {
-  color:var(--muted);
-}
-
-.small {
-  color:var(--muted);
-  font-size:12px;
-}
-
-.stats {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-  margin-top:15px;
-}
-
-.stat-box {
-  border-radius:16px;
-  padding:14px 8px;
-  text-align:center;
-  background:var(--green-light);
-}
-
-.stat-number {
-  font-size:25px;
-  font-weight:800;
-  color:var(--green-dark);
-}
-
-.stat-label {
-  font-size:11px;
-  color:var(--muted);
-  margin-top:2px;
-}
-
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:11px;
-}
-
-.quick {
-  min-height:100px;
-  border:0;
-  border-radius:20px;
-  color:white;
-  text-align:left;
-  padding:15px;
-  background:linear-gradient(135deg,#16895b,#0d6b45);
-  box-shadow:0 8px 18px rgba(13,107,69,.15);
-}
-
-.quick .icon {
-  display:block;
-  font-size:27px;
-  margin-bottom:12px;
-}
-
-.quick strong {
-  display:block;
-  font-size:16px;
-}
-
-.quick small {
-  display:block;
-  opacity:.8;
-  font-size:11px;
-  margin-top:3px;
-}
-
-input,
-select,
-textarea {
-  width:100%;
-  border:1px solid #cdd9d2;
-  border-radius:14px;
-  background:white;
-  color:var(--text);
-  padding:13px 14px;
-  margin:5px 0 11px;
-  outline:none;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(22,137,91,.10);
-}
-
-textarea {
-  min-height:110px;
-  resize:vertical;
-}
-
-label {
-  display:block;
-  font-size:13px;
-  font-weight:650;
-  margin-top:4px;
-}
-
-.row {
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-
-.row > * {
-  min-width:0;
-}
-
-.grow {
-  flex:1;
-}
-
-.btn {
-  border:0;
-  border-radius:13px;
-  padding:12px 15px;
-  font-weight:650;
-}
-
-.btn-primary {
-  background:var(--green);
-  color:white;
-}
-
-.btn-secondary {
-  background:#edf3ef;
-  color:#234235;
-}
-
-.btn-danger {
-  background:#fdeceb;
-  color:var(--danger);
-}
-
-.btn-full {
-  width:100%;
-}
-
-.item {
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:14px;
-  margin-top:10px;
-}
-
-.item.done {
-  opacity:.55;
-}
-
-.item.done .item-title {
-  text-decoration:line-through;
-}
-
-.item-top {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.item-title {
-  font-weight:750;
-  font-size:15px;
-}
-
-.meta {
-  margin-top:6px;
-  color:var(--muted);
-  line-height:1.5;
-  font-size:12px;
-}
-
-.badge {
-  display:inline-block;
-  border-radius:99px;
-  padding:4px 8px;
-  font-size:10px;
-  white-space:nowrap;
-  background:var(--green-light);
-  color:var(--green-dark);
-}
-
-.actions {
-  display:flex;
-  gap:7px;
-  margin-top:11px;
-  flex-wrap:wrap;
-}
-
-.actions button {
-  border:0;
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:11px;
-}
-
-.empty {
-  text-align:center;
-  padding:25px 10px;
-  color:var(--muted);
-}
-
-.section-head {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:8px;
-}
-
-.section-head h2,
-.section-head h3 {
-  margin:0;
-}
-
-.chips {
-  display:flex;
-  gap:7px;
-  overflow-x:auto;
-  padding:3px 0 8px;
-  scrollbar-width:none;
-}
-
-.chips::-webkit-scrollbar {
-  display:none;
-}
-
-.chip {
-  border:1px solid var(--line);
-  border-radius:99px;
-  padding:8px 11px;
-  background:white;
-  color:var(--text);
-  white-space:nowrap;
-  font-size:12px;
-}
-
-.chip.active {
-  color:white;
-  background:var(--green);
-  border-color:var(--green);
-}
-
-.note-card {
-  background:#fffdf3;
-  border-color:#eee4a9;
-}
-
-.note-text {
-  white-space:pre-wrap;
-  line-height:1.5;
-  font-size:14px;
-}
-
-.assistant-box {
-  min-height:310px;
-  max-height:48vh;
-  overflow:auto;
-  padding:6px 1px;
-}
-
-.message {
-  max-width:86%;
-  padding:12px 13px;
-  border-radius:17px;
-  margin:9px 0;
-  line-height:1.42;
-  white-space:pre-wrap;
-  font-size:14px;
-}
-
-.message.bot {
-  background:#edf2ef;
-  border-bottom-left-radius:5px;
-}
-
-.message.user {
-  margin-left:auto;
-  color:white;
-  background:var(--green);
-  border-bottom-right-radius:5px;
-}
-
-.notice {
-  padding:13px;
-  background:#fff7e6;
-  color:#754b00;
-  border:1px solid #fedf89;
-  border-radius:14px;
-  font-size:12px;
-  line-height:1.45;
-}
-
-.storage-info {
-  border-radius:14px;
-  padding:13px;
-  background:var(--green-light);
-  color:var(--green-dark);
-  font-size:12px;
-  line-height:1.5;
-}
-
-.bottom-nav {
-  position:fixed;
-  z-index:100;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:100%;
-  max-width:620px;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(20px);
-  border-top:1px solid var(--line);
-  display:flex;
-  justify-content:space-around;
-  padding:
-    8px
-    6px
-    calc(8px + env(safe-area-inset-bottom));
-}
-
-.nav-btn {
-  flex:1;
-  border:0;
-  background:transparent;
-  color:#6d7973;
-  border-radius:14px;
-  padding:7px 2px;
-  font-size:10px;
-}
-
-.nav-btn span {
-  display:block;
-  font-size:22px;
-  margin-bottom:2px;
-}
-
-.nav-btn.active {
-  color:var(--green-dark);
-  background:var(--green-light);
-  font-weight:700;
-}
-
-.fab {
-  position:fixed;
-  z-index:110;
-  right:max(20px,calc((100vw - 620px)/2 + 20px));
-  bottom:86px;
-  border:0;
-  border-radius:50%;
-  width:57px;
-  height:57px;
-  color:white;
-  background:var(--green);
-  font-size:30px;
-  box-shadow:0 10px 25px rgba(0,0,0,.22);
-}
-
-.modal {
-  display:none;
-  position:fixed;
-  z-index:500;
-  inset:0;
-  background:rgba(0,0,0,.43);
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal.open {
-  display:flex;
-}
-
-.sheet {
-  width:100%;
-  max-width:620px;
-  max-height:88vh;
-  overflow:auto;
-  border-radius:26px 26px 0 0;
-  background:var(--card);
-  padding:20px 17px calc(20px + env(safe-area-inset-bottom));
-}
-
-.sheet-handle {
-  width:50px;
-  height:5px;
-  border-radius:99px;
-  background:#ccd5d0;
-  margin:0 auto 17px;
-}
-
-.onboarding {
-  position:fixed;
-  z-index:1000;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:22px;
-  color:white;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.14),transparent 30%),
-    linear-gradient(145deg,#064f33,#159161);
-}
-
-.onboarding.open {
-  display:flex;
-}
-
-.onboard-box {
-  width:100%;
-  max-width:500px;
-}
-
-.onboard-logo {
-  font-size:64px;
-  text-align:center;
-  margin-bottom:10px;
-}
-
-.onboard-box h1 {
-  text-align:center;
-  margin-bottom:4px;
-}
-
-.onboard-box p {
-  text-align:center;
-  opacity:.88;
-}
-
-.onboard-box input {
-  background:rgba(255,255,255,.97);
-}
-
-.today-highlight {
-  border-left:5px solid var(--green);
-}
-
-.priority-high {
-  border-left:5px solid var(--danger);
-}
-
-.priority-medium {
-  border-left:5px solid var(--warning);
-}
-
-.priority-low {
-  border-left:5px solid var(--green);
-}
-
-.hidden {
-  display:none !important;
-}
-
-body.dark {
-  --bg:#0d1511;
-  --card:#17211c;
-  --text:#f0f6f2;
-  --muted:#a5b2ab;
-  --line:#2d3a33;
-  --green-light:#203c2f;
-}
-
-body.dark input,
-body.dark select,
-body.dark textarea,
-body.dark .item,
-body.dark .chip {
-  background:#1c2822;
-  color:var(--text);
-  border-color:#37453e;
-}
-
-body.dark .message.bot,
-body.dark .btn-secondary {
-  background:#26342d;
-  color:#f0f6f2;
-}
-
-body.dark .bottom-nav {
-  background:rgba(23,33,28,.96);
-}
-
-body.dark .note-card {
-  background:#2b291d;
-  border-color:#514b2c;
-}
-
-@media(max-width:380px) {
-  .stats {
-    grid-template-columns:1fr 1fr 1fr;
-  }
-
-  .grid {
-    grid-template-columns:1fr 1fr;
-  }
-
-  .nav-btn {
-    font-size:9px;
-  }
+:root{
+  --bg:#03110c;--bg2:#06251a;--card:rgba(7,34,24,.78);--card2:rgba(11,47,34,.92);
+  --line:rgba(116,255,183,.28);--line2:rgba(116,255,183,.55);--green:#45f49a;--green2:#1ed777;
+  --text:#f4fff8;--muted:#a9c5b6;--danger:#ff7474;--warn:#ffd36d;--shadow:0 18px 50px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -15%,#0e633d 0,#073322 24%,var(--bg) 52%,#010805 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Arial,sans-serif}
+body{min-height:100vh;overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;inset:auto;pointer-events:none;opacity:.17;filter:blur(.2px)}
+body::before{width:420px;height:420px;left:-210px;top:240px;background:radial-gradient(ellipse at center,rgba(55,255,142,.35),transparent 65%);transform:rotate(-15deg)}
+body::after{width:520px;height:520px;right:-270px;bottom:80px;background:radial-gradient(ellipse at center,rgba(55,255,142,.25),transparent 66%)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:0 auto;min-height:100vh;padding:calc(18px + env(safe-area-inset-top)) 16px calc(104px + env(safe-area-inset-bottom));position:relative;z-index:1}
+.topbar{display:grid;grid-template-columns:58px 1fr 58px;align-items:center;gap:10px;margin-bottom:18px}
+.iconbtn{width:54px;height:54px;border-radius:50%;border:1px solid var(--line2);background:rgba(6,38,26,.72);color:#fff;font-size:26px;display:grid;place-items:center;box-shadow:inset 0 0 22px rgba(48,255,141,.08)}
+.brand{text-align:center}.brand h1{margin:0;font-size:34px;letter-spacing:-1px}.brand p{margin:4px 0 0;color:var(--muted);font-size:15px}.leaf{color:var(--green)}
+.tagline{margin:0 auto 16px;max-width:580px;border:1px solid var(--line2);border-radius:999px;padding:12px 20px;background:rgba(5,30,21,.74);display:flex;align-items:center;justify-content:center;gap:12px;color:#eafff1;box-shadow:inset 0 0 24px rgba(46,255,139,.05)}
+.screen{display:none}.screen.active{display:block}
+.hero{position:relative;width:min(94vw,650px);height:min(94vw,650px);max-height:650px;margin:8px auto 12px}
+.orbit{position:absolute;inset:6%;border-radius:50%;border:1px solid rgba(108,255,176,.32);box-shadow:inset 0 0 38px rgba(30,215,119,.08)}
+.orbit::before,.orbit::after{content:"";position:absolute;border-radius:50%;inset:10%;border:1px solid rgba(69,244,154,.26)}
+.orbit::after{inset:20%;border-color:rgba(69,244,154,.18)}
+.centerTile,.orbTile{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;border:2px solid rgba(183,255,220,.62);background:radial-gradient(circle at 35% 24%,rgba(255,255,255,.15),rgba(6,51,34,.95) 45%,rgba(2,19,13,.98) 100%);box-shadow:inset 0 0 24px rgba(75,255,161,.14),0 0 28px rgba(45,255,144,.10);transition:.15s transform,.15s box-shadow}
+.centerTile:active,.orbTile:active{transform:translate(-50%,-50%) scale(.96)}
+.centerTile{width:38%;height:38%;left:50%;top:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 25%,#40ef95,#0a8b50 52%,#055232 100%);border:3px solid #77ffc0;box-shadow:0 0 28px rgba(51,255,150,.45),inset 0 0 40px rgba(255,255,255,.12);z-index:3}
+.centerTile .ico{font-size:54px}.centerTile b{font-size:29px;margin-top:5px}.centerTile small{font-size:14px;line-height:1.2;margin-top:6px;color:#eafff1}
+.orbTile{width:24%;height:24%;transform:translate(-50%,-50%);z-index:2}.orbTile .ico{font-size:31px;line-height:1}.orbTile b{font-size:15px;margin-top:8px}
+.o1{left:50%;top:12%}.o2{left:78%;top:23%}.o3{left:89%;top:50%}.o4{left:78%;top:77%}.o5{left:50%;top:88%}.o6{left:22%;top:77%}.o7{left:11%;top:50%}.o8{left:22%;top:23%}
+.dots{text-align:center;color:#537d68;letter-spacing:8px;font-size:20px}.dots .on{color:var(--green)}.swipe{text-align:center;color:var(--muted);margin:5px 0 20px}
+.quote{border:1px solid var(--line2);border-radius:28px;padding:18px 22px;background:rgba(6,36,25,.70);display:flex;align-items:center;gap:16px;box-shadow:var(--shadow)}.quote .qico{font-size:36px}.quote b{font-size:18px}.quote span{display:block;color:var(--muted);margin-top:3px}
+.bottomnav{position:fixed;z-index:20;left:50%;transform:translateX(-50%);bottom:calc(8px + env(safe-area-inset-bottom));width:min(96%,760px);display:grid;grid-template-columns:1fr 1fr 86px 1fr 1fr;align-items:center;padding:7px;border:1px solid rgba(124,255,186,.18);border-radius:35px;background:rgba(2,14,10,.92);backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.navbtn{height:58px;border:0;background:transparent;color:#b8cbbf;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px}.navbtn .nicon{font-size:23px}.navbtn.active{color:var(--green);font-weight:800}
+.plus{width:74px;height:74px;margin:-22px auto 0;border-radius:50%;border:2px solid #48f89c;background:radial-gradient(circle,#1ad878,#075c39 70%,#04311f);color:#fff;font-size:42px;line-height:1;box-shadow:0 0 0 8px rgba(18,117,72,.35),0 0 26px rgba(56,255,151,.33)}
+.pageHead{display:flex;align-items:center;gap:12px;margin:5px 0 18px}.back{border:1px solid var(--line2);background:rgba(6,38,26,.65);color:#fff;width:44px;height:44px;border-radius:50%;font-size:22px}.pageHead h2{margin:0;font-size:28px}.pageHead p{margin:4px 0 0;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}
+.card h3{margin:0 0 12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+input,textarea,select{width:100%;border:1px solid rgba(133,255,188,.28);border-radius:14px;background:#06150f;color:#fff;padding:13px 14px;margin:6px 0 10px;outline:none}
+textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--green)}
+label{display:block;color:#d8eee1;font-size:14px;margin-top:6px}
+.btn{border:0;border-radius:14px;padding:12px 15px;background:linear-gradient(180deg,#48f69c,#1bcf76);color:#032014;font-weight:850}
+.btn.secondary{background:#0e2f21;color:#eafff2;border:1px solid var(--line)}
+.btn.danger{background:#4c1d1d;color:#fff;border:1px solid rgba(255,125,125,.25)}
+.btn.warn{background:#473916;color:#fff4c1}
+.btn.wide{width:100%}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.item{border:1px solid rgba(137,255,191,.18);border-radius:17px;padding:13px;margin:9px 0;background:rgba(3,22,15,.72)}
+.item.done{opacity:.55}.item.done .title{text-decoration:line-through}
+.title{font-weight:800}
+.meta{color:var(--muted);font-size:13px;line-height:1.45;margin-top:4px}
+.badge{display:inline-block;border:1px solid rgba(83,255,159,.26);border-radius:999px;padding:3px 8px;font-size:11px;color:#c9ffe0;margin-left:5px}
+.empty{text-align:center;color:var(--muted);padding:25px 10px}
+.stat{font-size:30px;font-weight:900;color:var(--green)}
+.statbox{text-align:center;border:1px solid var(--line);border-radius:17px;padding:14px;background:rgba(5,28,20,.65)}
+.searchbar{display:flex;gap:8px}.searchbar input{margin:0}
+.result{padding:11px;border-bottom:1px solid rgba(128,255,186,.14)}.result:last-child{border-bottom:0}.clickable{cursor:pointer}
+.quickgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.quick{border:1px solid var(--line);background:rgba(6,33,23,.78);color:#fff;border-radius:18px;padding:16px;text-align:left}.quick b{display:block;margin-top:7px}
+.chat{height:52vh;min-height:320px;overflow:auto;padding:4px}
+.msg{max-width:84%;padding:11px 13px;border-radius:16px;margin:9px 0;white-space:pre-wrap}
+.msg.bot{background:#0d2d20;border:1px solid var(--line)}
+.msg.user{margin-left:auto;background:#159a5a}
+.chatrow{display:grid;grid-template-columns:1fr auto;gap:8px}.chatrow input{margin:0}
+.noteText{white-space:pre-wrap;color:#e8fff1;margin-top:8px}
+.favstar{float:right;font-size:21px;border:0;background:transparent;color:#8da79a}.favstar.on{color:#ffe36d}
+.switchrow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(124,255,186,.11)}
+.switchrow:last-child{border-bottom:0}.switchrow input{width:auto;margin:0;transform:scale(1.25)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:120px;background:#e9fff2;color:#052114;padding:11px 16px;border-radius:999px;font-weight:800;z-index:50;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center;z-index:40;padding:14px}.modal.open{display:flex}
+.sheet{width:min(100%,680px);max-height:88vh;overflow:auto;background:#061b13;border:1px solid var(--line2);border-radius:28px;padding:18px;box-shadow:0 0 50px rgba(0,0,0,.55)}
+.filechip{display:flex;align-items:center;justify-content:space-between;gap:10px}.filechip .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.small{font-size:12px;color:var(--muted)}
+.hidden{display:none!important}
+body.large{font-size:19px}body.large .orbTile b{font-size:16px}
+body.highContrast{--line:rgba(153,255,198,.60);--muted:#d0e6da}
+@media(max-width:540px){
+  .brand h1{font-size:29px}.brand p{font-size:13px}
+  .hero{width:96vw;height:96vw;margin-left:50%;transform:translateX(-50%)}
+  .orbTile b{font-size:12.5px}.orbTile .ico{font-size:27px}
+  .centerTile b{font-size:24px}.centerTile .ico{font-size:45px}
+  .grid3{grid-template-columns:1fr 1fr}.quote{border-radius:22px}.tagline{font-size:14px}
+  .app{padding-left:12px;padding-right:12px}
+}
+@media(max-width:370px){
+  .orbTile b{font-size:11px}.orbTile .ico{font-size:23px}
+  .centerTile small{font-size:11px}.centerTile b{font-size:21px}.centerTile .ico{font-size:40px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
-<header>
-  <div class="logo-line">
-    <div class="logo">
-      <div class="logo-icon">🎋</div>
+<section id="home" class="screen active">
+  <div class="topbar">
+    <button class="iconbtn" onclick="openMenu()">☰</button>
+    <div class="brand">
+      <h1><span class="leaf">🌿</span> Bamboo Bot</h1>
+      <p id="subline">Dein persönlicher digitaler Assistent</p>
+    </div>
+    <button class="iconbtn" onclick="go('settings')">👤</button>
+  </div>
+
+  <div class="tagline">
+    <span style="font-size:26px">🌿</span>
+    <span>Organisieren. Planen. Erinnern.<br>Privat auf deinem Gerät.</span>
+  </div>
+
+  <div class="hero" id="hero">
+    <div class="orbit"></div>
+
+    <button class="centerTile" onclick="go('planner')">
+      <span class="ico">🗓️</span>
+      <b>Planer</b>
+      <small>Dein Alltag<br>im Blick</small>
+    </button>
+
+    <button class="orbTile o1" onclick="go('notes')"><span class="ico">📄</span><b>Notizen</b></button>
+    <button class="orbTile o2" onclick="go('reminders')"><span class="ico">🔔</span><b>Erinnerungen</b></button>
+    <button class="orbTile o3" onclick="go('files')"><span class="ico">📁</span><b>Dateien</b></button>
+    <button class="orbTile o4" onclick="go('settings')"><span class="ico">⚙️</span><b>Einstellungen</b></button>
+    <button class="orbTile o5" onclick="go('favorites')"><span class="ico">⭐</span><b>Favoriten</b></button>
+    <button class="orbTile o6" onclick="go('stats')"><span class="ico">📊</span><b>Statistiken</b></button>
+    <button class="orbTile o7" onclick="go('assistant')"><span class="ico">🧠</span><b>KI-Chat</b></button>
+    <button class="orbTile o8" onclick="go('tasks')"><span class="ico">✓</span><b>Aufgaben</b></button>
+  </div>
+
+  <div class="dots">● <span class="on">●</span> ●</div>
+  <div class="swipe">Tippe auf eine Kachel</div>
+
+  <div class="quote">
+    <div class="qico">🎋</div>
+    <div>
+      <b>„Kleine Schritte. Große Ziele.“</b>
+      <span>Bamboo Bot 8.0</span>
+    </div>
+  </div>
+</section>
+
+<section id="planner" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>🗓️ Planer</h2><p>Alles Wichtige an einem Ort</p></div>
+  </div>
+
+  <div class="grid3">
+    <div class="statbox"><div class="stat" id="pToday">0</div><div class="small">Heute</div></div>
+    <div class="statbox"><div class="stat" id="pOpen">0</div><div class="small">Offen</div></div>
+    <div class="statbox"><div class="stat" id="pNotes">0</div><div class="small">Notizen</div></div>
+  </div>
+
+  <div class="card"><h3>Heute</h3><div id="plannerToday"></div></div>
+  <div class="card"><h3>Als Nächstes</h3><div id="plannerNext"></div></div>
+</section>
+
+<section id="tasks" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>✓ Aufgaben</h2><p>Erstellen, priorisieren und abhaken</p></div>
+  </div>
+
+  <div class="card">
+    <h3>Neue Aufgabe</h3>
+
+    <input id="taskTitle" maxlength="120" placeholder="Was möchtest du erledigen?">
+
+    <div class="grid2">
+      <div>
+        <label>Datum</label>
+        <input id="taskDate" type="date">
+      </div>
+      <div>
+        <label>Uhrzeit</label>
+        <input id="taskTime" type="time">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label>Priorität</label>
+        <select id="taskPriority">
+          <option value="normal">Normal</option>
+          <option value="hoch">Hoch</option>
+          <option value="niedrig">Niedrig</option>
+        </select>
+      </div>
 
       <div>
-        <h1>Bamboo Bot</h1>
-        <div class="version">Version 7.0.3</div>
+        <label>Kategorie</label>
+        <select id="taskCategory">
+          <option>Alltag</option>
+          <option>Familie</option>
+          <option>Arbeit</option>
+          <option>Gesundheit</option>
+          <option>Finanzen</option>
+          <option>Haushalt</option>
+          <option>Einkauf</option>
+        </select>
       </div>
     </div>
 
-    <div class="header-badge">Lokal & privat</div>
+    <button class="btn wide" onclick="addTask()">Aufgabe speichern</button>
   </div>
-</header>
-
-
-<main>
-
-<!-- START -->
-<section id="home" class="page active">
-
-  <div class="card hero">
-    <h2 class="greeting" id="greeting">Hallo 👋</h2>
-    <div id="todayDate" class="muted"></div>
-
-    <div class="stats">
-      <div class="stat-box">
-        <div class="stat-number" id="todayCount">0</div>
-        <div class="stat-label">Heute</div>
-      </div>
-
-      <div class="stat-box">
-        <div class="stat-number" id="taskCount">0</div>
-        <div class="stat-label">Aufgaben</div>
-      </div>
-
-      <div class="stat-box">
-        <div class="stat-number" id="noteCount">0</div>
-        <div class="stat-label">Notizen</div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="grid">
-    <button class="quick" data-go="planner">
-      <span class="icon">📅</span>
-      <strong>Planer</strong>
-      <small>Termine & Erinnerungen</small>
-    </button>
-
-    <button class="quick" data-go="tasks">
-      <span class="icon">✅</span>
-      <strong>Aufgaben</strong>
-      <small>Alles im Blick</small>
-    </button>
-
-    <button class="quick" data-go="notes">
-      <span class="icon">📝</span>
-      <strong>Notizen</strong>
-      <small>Nichts vergessen</small>
-    </button>
-
-    <button class="quick" data-go="assistant">
-      <span class="icon">🤖</span>
-      <strong>Bamboo</strong>
-      <small>Dein Assistent</small>
-    </button>
-  </div>
-
-
-  <div class="card" style="margin-top:14px">
-    <div class="section-head">
-      <h3>Heute</h3>
-      <button class="btn btn-secondary" id="homeAdd">
-        + Neu
-      </button>
-    </div>
-
-    <div id="todayList"></div>
-  </div>
-
-</section>
-
-
-
-<!-- PLANER -->
-<section id="planner" class="page">
 
   <div class="card">
-
-    <div class="section-head">
-      <h2>📅 Planer</h2>
-
-      <button class="btn btn-primary" id="plannerAdd">
-        + Neu
-      </button>
-    </div>
-
-    <input
-      id="plannerSearch"
-      placeholder="🔎 Termine durchsuchen..."
-    >
-
-    <div class="chips">
-      <button class="chip active" data-filter="all">Alle</button>
-      <button class="chip" data-filter="today">Heute</button>
-      <button class="chip" data-filter="week">7 Tage</button>
-      <button class="chip" data-filter="open">Offen</button>
-      <button class="chip" data-filter="done">Erledigt</button>
-    </div>
-
-    <div id="plannerList"></div>
-
-  </div>
-
-</section>
-
-
-
-<!-- AUFGABEN -->
-<section id="tasks" class="page">
-
-  <div class="card">
-
-    <div class="section-head">
-      <h2>✅ Aufgaben</h2>
-
-      <button class="btn btn-primary" id="taskAdd">
-        + Aufgabe
-      </button>
-    </div>
-
-    <input
-      id="taskSearch"
-      placeholder="🔎 Aufgaben durchsuchen..."
-    >
-
+    <h3>Meine Aufgaben</h3>
     <div id="taskList"></div>
-
   </div>
-
 </section>
 
-
-
-<!-- NOTIZEN -->
-<section id="notes" class="page">
+<section id="notes" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>📄 Notizen</h2><p>Schnell festhalten, nichts vergessen</p></div>
+  </div>
 
   <div class="card">
+    <h3>Neue Notiz</h3>
+    <input id="noteTitle" maxlength="120" placeholder="Titel">
+    <textarea id="noteText" maxlength="6000" placeholder="Deine Notiz..."></textarea>
+    <button class="btn wide" onclick="addNote()">Notiz speichern</button>
+  </div>
 
-    <div class="section-head">
-      <h2>📝 Notizen</h2>
-
-      <button class="btn btn-primary" id="noteAdd">
-        + Notiz
-      </button>
-    </div>
-
-    <input
-      id="noteSearch"
-      placeholder="🔎 Notizen durchsuchen..."
-    >
-
+  <div class="card">
+    <h3>Gespeicherte Notizen</h3>
     <div id="noteList"></div>
-
   </div>
-
 </section>
 
-
-
-<!-- ASSISTENT -->
-<section id="assistant" class="page">
+<section id="reminders" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>🔔 Erinnerungen</h2><p>Termine und Erinnerungen im Blick</p></div>
+  </div>
 
   <div class="card">
+    <h3>Neue Erinnerung</h3>
 
-    <h2>🤖 Bamboo Assistent</h2>
+    <input id="remTitle" maxlength="120" placeholder="Woran soll Bamboo dich erinnern?">
 
-    <div class="notice">
-      Bamboo arbeitet in dieser Testversion lokal auf deinem Gerät.
-      Es werden keine kostenpflichtigen KI-Dienste verwendet.
-    </div>
-
-    <div id="chat" class="assistant-box">
-
-      <div class="message bot">
-Hallo! 🎋
-Ich bin Bamboo.
-
-Frag mich zum Beispiel:
-
-• „Was habe ich heute?“
-• „Wie viele Aufgaben habe ich?“
-• „Welche Termine sind offen?“
-• „Wie viele Notizen habe ich?“
+    <div class="grid2">
+      <div>
+        <label>Datum</label>
+        <input id="remDate" type="date">
       </div>
-
+      <div>
+        <label>Uhrzeit</label>
+        <input id="remTime" type="time">
+      </div>
     </div>
 
-    <div class="row">
-      <input
-        id="messageInput"
-        class="grow"
-        placeholder="Nachricht schreiben..."
-      >
+    <input id="remPlace" maxlength="160" placeholder="Ort / Adresse (optional)">
 
-      <button
-        id="sendMessage"
-        class="btn btn-primary">
-        Senden
-      </button>
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- MEHR -->
-<section id="settings" class="page">
-
-  <div class="card">
-
-    <h2>⚙️ Einstellungen</h2>
-
-    <label>Dein Name</label>
-
-    <input
-      id="userName"
-      maxlength="50"
-      placeholder="z. B. Andreas"
-    >
-
-    <label>Darstellung</label>
-
-    <select id="themeSelect">
-      <option value="system">System</option>
-      <option value="light">Hell</option>
-      <option value="dark">Dunkel</option>
+    <select id="remCategory">
+      <option>Privat</option>
+      <option>Familie</option>
+      <option>Arbeit</option>
+      <option>Arzt</option>
+      <option>Medikament</option>
+      <option>Haustier</option>
+      <option>Finanzen</option>
+      <option>Telefon</option>
     </select>
 
-    <button
-      id="saveSettings"
-      class="btn btn-primary btn-full">
-      Einstellungen speichern
-    </button>
-
+    <button class="btn wide" onclick="addReminder()">Erinnerung speichern</button>
   </div>
-
 
   <div class="card">
-
-    <h3>🔒 Deine Daten</h3>
-
-    <div class="storage-info">
-      Bamboo Bot 7.0.3 speichert Termine, Aufgaben,
-      Notizen und Einstellungen lokal in diesem Browser.
-      Für den aktuellen Test ist kein Konto erforderlich.
-    </div>
-
-    <br>
-
-    <div class="row">
-      <button
-        id="exportData"
-        class="btn btn-secondary grow">
-        Export
-      </button>
-
-      <button
-        id="importButton"
-        class="btn btn-secondary grow">
-        Import
-      </button>
-    </div>
-
-    <input
-      id="importFile"
-      type="file"
-      accept="application/json"
-      class="hidden"
-    >
-
+    <h3>Meine Erinnerungen</h3>
+    <div id="remList"></div>
   </div>
-
-
-  <div class="card">
-
-    <h3>🧪 Testbereich</h3>
-
-    <p class="small">
-      Dieser Bereich ist für unsere iPhone-Tests gedacht.
-    </p>
-
-    <button
-      id="testStorage"
-      class="btn btn-secondary btn-full">
-      Lokalen Speicher testen
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>⚠️ Daten löschen</h3>
-
-    <p class="small">
-      Hiermit werden alle Bamboo-Daten auf diesem Gerät gelöscht.
-    </p>
-
-    <button
-      id="clearAll"
-      class="btn btn-danger btn-full">
-      Alle lokalen Daten löschen
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <h3>Über Bamboo</h3>
-
-    <p>
-      <strong>Bamboo Bot 7.0.3</strong>
-    </p>
-
-    <p class="small">
-      Kostenlose private Testversion.
-      Für mich. Für meine Familie. Für uns.
-    </p>
-
-  </div>
-
 </section>
 
+<section id="files" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>📁 Dateien</h2><p>Kleine Dateien lokal in Bamboo ablegen</p></div>
+  </div>
 
-</main>
+  <div class="card">
+    <h3>Datei hinzufügen</h3>
+    <input id="fileInput" type="file">
+    <p class="small">Für die Testversion werden kleine Dateien lokal im Browser gespeichert. Große Dateien können wegen Browser-Speichergrenzen abgelehnt werden.</p>
+    <button class="btn wide" onclick="addFile()">Datei lokal speichern</button>
+  </div>
 
+  <div class="card">
+    <h3>Meine Dateien</h3>
+    <div id="fileList"></div>
+  </div>
+</section>
 
-<button
-  class="fab"
-  id="fab"
-  aria-label="Neuen Eintrag erstellen">
-  +
-</button>
+<section id="assistant" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>🧠 Bamboo Assistent</h2><p>Lokale Hilfe für deine Bamboo-Daten</p></div>
+  </div>
 
+  <div class="card">
+    <div id="chat" class="chat">
+      <div class="msg bot">Hallo! Ich bin Bamboo 8.0. Frag mich z. B. „Was steht heute an?“, „Wie viele Aufgaben sind offen?“ oder „Zeig mir meine nächsten Termine.“</div>
+    </div>
 
+    <div class="chatrow">
+      <input id="chatInput" placeholder="Nachricht schreiben...">
+      <button class="btn" onclick="sendChat()">Senden</button>
+    </div>
 
-<nav class="bottom-nav">
+    <div class="actions">
+      <button class="btn secondary" onclick="quickAsk('Was steht heute an?')">Heute</button>
+      <button class="btn secondary" onclick="quickAsk('Was ist als Nächstes?')">Als Nächstes</button>
+      <button class="btn secondary" onclick="quickAsk('Wie viele Aufgaben sind offen?')">Offen</button>
+    </div>
 
-  <button class="nav-btn active" data-go="home">
-    <span>🏠</span>
-    Heute
-  </button>
+    <p class="small">Diese Testversion nutzt keine externe KI. Antworten werden lokal aus deinen gespeicherten Bamboo-Daten erzeugt.</p>
+  </div>
+</section>
 
-  <button class="nav-btn" data-go="planner">
-    <span>📅</span>
-    Planer
-  </button>
+<section id="stats" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>📊 Statistiken</h2><p>Dein Bamboo auf einen Blick</p></div>
+  </div>
 
-  <button class="nav-btn" data-go="tasks">
-    <span>✅</span>
-    Aufgaben
-  </button>
+  <div class="grid2">
+    <div class="statbox"><div class="stat" id="sTasks">0</div><div class="small">offene Aufgaben</div></div>
+    <div class="statbox"><div class="stat" id="sDone">0</div><div class="small">erledigte Aufgaben</div></div>
+    <div class="statbox"><div class="stat" id="sRem">0</div><div class="small">offene Erinnerungen</div></div>
+    <div class="statbox"><div class="stat" id="sNotes">0</div><div class="small">Notizen</div></div>
+  </div>
 
-  <button class="nav-btn" data-go="notes">
-    <span>📝</span>
-    Notizen
-  </button>
+  <div class="card">
+    <h3>Fortschritt</h3>
+    <div id="progressText"></div>
+  </div>
+</section>
 
-  <button class="nav-btn" data-go="settings">
-    <span>⚙️</span>
-    Mehr
-  </button>
+<section id="favorites" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>⭐ Favoriten</h2><p>Deine markierten Inhalte</p></div>
+  </div>
 
+  <div class="card">
+    <div id="favList"></div>
+  </div>
+</section>
+
+<section id="search" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>🔎 Suche</h2><p>Durchsuche Aufgaben, Notizen und Erinnerungen</p></div>
+  </div>
+
+  <div class="card">
+    <div class="searchbar">
+      <input id="searchInput" placeholder="Suchbegriff..." oninput="renderSearch()">
+    </div>
+    <div id="searchResults"></div>
+  </div>
+</section>
+
+<section id="history" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>🕘 Verlauf</h2><p>Zuletzt erledigte Aufgaben und Erinnerungen</p></div>
+  </div>
+
+  <div class="card">
+    <div id="historyList"></div>
+  </div>
+</section>
+
+<section id="settings" class="screen">
+  <div class="pageHead">
+    <button class="back" onclick="go('home')">‹</button>
+    <div><h2>⚙️ Einstellungen</h2><p>Bamboo an dich anpassen</p></div>
+  </div>
+
+  <div class="card">
+    <h3>Profil</h3>
+    <label>Dein Name</label>
+    <input id="setName" maxlength="60" placeholder="z. B. Andi">
+
+    <label>Untertitel</label>
+    <input id="setSubtitle" maxlength="90" placeholder="Dein persönlicher digitaler Assistent">
+
+    <button class="btn wide" onclick="saveSettings()">Einstellungen speichern</button>
+  </div>
+
+  <div class="card">
+    <h3>Darstellung</h3>
+
+    <div class="switchrow">
+      <span>Große Schrift</span>
+      <input id="setLarge" type="checkbox" onchange="saveSettings(false)">
+    </div>
+
+    <div class="switchrow">
+      <span>Hoher Kontrast</span>
+      <input id="setContrast" type="checkbox" onchange="saveSettings(false)">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Datensicherung</h3>
+    <p class="small">Deine Daten bleiben lokal auf diesem Gerät. Für einen Gerätewechsel kannst du eine Sicherung exportieren.</p>
+
+    <div class="actions">
+      <button class="btn secondary" onclick="exportData()">Backup exportieren</button>
+      <button class="btn secondary" onclick="document.getElementById('importInput').click()">Backup importieren</button>
+      <input id="importInput" class="hidden" type="file" accept="application/json" onchange="importData(event)">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Daten</h3>
+    <button class="btn danger wide" onclick="clearAll()">Alle Bamboo-Daten löschen</button>
+  </div>
+
+  <div class="card">
+    <h3>Version</h3>
+    <p><b>Bamboo Bot 8.0</b> – Familien-Testversion</p>
+    <p class="small">Lokal, ohne kostenpflichtige Dienste. Hintergrund-Push, echte Cloud-Synchronisierung und externe KI sind in dieser Testversion bewusst nicht aktiviert.</p>
+  </div>
+</section>
+
+</div>
+
+<nav class="bottomnav">
+  <button class="navbtn active" data-nav="home" onclick="go('home')"><span class="nicon">⌂</span>Home</button>
+  <button class="navbtn" data-nav="search" onclick="go('search')"><span class="nicon">⌕</span>Suche</button>
+  <button class="plus" onclick="openQuick()">＋</button>
+  <button class="navbtn" data-nav="history" onclick="go('history')"><span class="nicon">◷</span>Verlauf</button>
+  <button class="navbtn" data-nav="settings" onclick="go('settings')"><span class="nicon">•••</span>Mehr</button>
 </nav>
 
-</div>
+<div id="toast" class="toast"></div>
 
-
-
-<!-- NEUER TERMIN -->
-<div class="modal" id="entryModal">
-
+<div id="quickModal" class="modal" onclick="if(event.target===this)closeQuick()">
   <div class="sheet">
-
-    <div class="sheet-handle"></div>
-
-    <div class="section-head">
-      <h2>Neuer Eintrag</h2>
-
-      <button
-        class="btn btn-secondary"
-        data-close="entryModal">
-        ✕
-      </button>
+    <div class="pageHead" style="margin-top:0">
+      <div><h2>＋ Neu</h2><p>Was möchtest du hinzufügen?</p></div>
     </div>
 
-    <label>Typ</label>
-
-    <select id="entryType">
-      <option value="Termin">📅 Termin</option>
-      <option value="Erinnerung">🔔 Erinnerung</option>
-      <option value="Medikament">💊 Medikament</option>
-      <option value="Einkauf">🛒 Einkauf</option>
-      <option value="Telefonat">☎️ Telefonat</option>
-      <option value="Familie">👨‍👩‍👧 Familie</option>
-      <option value="Arbeit">💼 Arbeit</option>
-      <option value="Haustier">🐾 Haustier</option>
-    </select>
-
-    <label>Titel</label>
-
-    <input
-      id="entryTitle"
-      maxlength="100"
-      placeholder="Was steht an?"
-    >
-
-    <div class="row">
-
-      <div class="grow">
-        <label>Datum</label>
-        <input id="entryDate" type="date">
-      </div>
-
-      <div class="grow">
-        <label>Uhrzeit</label>
-        <input id="entryTime" type="time">
-      </div>
-
+    <div class="quickgrid">
+      <button class="quick" onclick="closeQuick();go('tasks');focusId('taskTitle')">✓<b>Aufgabe</b></button>
+      <button class="quick" onclick="closeQuick();go('reminders');focusId('remTitle')">🔔<b>Erinnerung</b></button>
+      <button class="quick" onclick="closeQuick();go('notes');focusId('noteTitle')">📄<b>Notiz</b></button>
+      <button class="quick" onclick="closeQuick();go('files')">📁<b>Datei</b></button>
     </div>
 
-    <label>Ort / Adresse</label>
-
-    <input
-      id="entryPlace"
-      maxlength="150"
-      placeholder="Optional"
-    >
-
-    <label>Fahrzeit in Minuten</label>
-
-    <input
-      id="entryTravel"
-      type="number"
-      min="0"
-      max="600"
-      placeholder="Optional"
-    >
-
-    <label>Priorität</label>
-
-    <select id="entryPriority">
-      <option value="low">Niedrig</option>
-      <option value="medium" selected>Normal</option>
-      <option value="high">Wichtig</option>
-    </select>
-
-    <button
-      id="saveEntry"
-      class="btn btn-primary btn-full">
-      Speichern
-    </button>
-
+    <button class="btn secondary wide" style="margin-top:12px" onclick="closeQuick()">Schließen</button>
   </div>
-
 </div>
 
-
-
-<!-- NEUE AUFGABE -->
-<div class="modal" id="taskModal">
-
+<div id="menuModal" class="modal" onclick="if(event.target===this)closeMenu()">
   <div class="sheet">
+    <h2 style="margin-top:0">🎋 Bamboo Bot 8.0</h2>
 
-    <div class="sheet-handle"></div>
-
-    <div class="section-head">
-      <h2>Neue Aufgabe</h2>
-
-      <button
-        class="btn btn-secondary"
-        data-close="taskModal">
-        ✕
-      </button>
+    <div class="quickgrid">
+      <button class="quick" onclick="closeMenu();go('planner')">🗓️<b>Planer</b></button>
+      <button class="quick" onclick="closeMenu();go('assistant')">🧠<b>Assistent</b></button>
+      <button class="quick" onclick="closeMenu();go('favorites')">⭐<b>Favoriten</b></button>
+      <button class="quick" onclick="closeMenu();go('settings')">⚙️<b>Einstellungen</b></button>
     </div>
 
-    <label>Aufgabe</label>
-
-    <input
-      id="taskTitleInput"
-      maxlength="120"
-      placeholder="Was möchtest du erledigen?"
-    >
-
-    <label>Fällig am</label>
-
-    <input
-      id="taskDateInput"
-      type="date"
-    >
-
-    <label>Priorität</label>
-
-    <select id="taskPriorityInput">
-      <option value="low">Niedrig</option>
-      <option value="medium" selected>Normal</option>
-      <option value="high">Wichtig</option>
-    </select>
-
-    <button
-      id="saveTask"
-      class="btn btn-primary btn-full">
-      Aufgabe speichern
-    </button>
-
+    <button class="btn secondary wide" style="margin-top:12px" onclick="closeMenu()">Schließen</button>
   </div>
-
 </div>
-
-
-
-<!-- NEUE NOTIZ -->
-<div class="modal" id="noteModal">
-
-  <div class="sheet">
-
-    <div class="sheet-handle"></div>
-
-    <div class="section-head">
-      <h2>Neue Notiz</h2>
-
-      <button
-        class="btn btn-secondary"
-        data-close="noteModal">
-        ✕
-      </button>
-    </div>
-
-    <label>Titel</label>
-
-    <input
-      id="noteTitleInput"
-      maxlength="100"
-      placeholder="Titel der Notiz"
-    >
-
-    <label>Notiz</label>
-
-    <textarea
-      id="noteTextInput"
-      maxlength="3000"
-      placeholder="Schreib deine Notiz..."
-    ></textarea>
-
-    <button
-      id="saveNote"
-      class="btn btn-primary btn-full">
-      Notiz speichern
-    </button>
-
-  </div>
-
-</div>
-
-
-
-<!-- ONBOARDING -->
-<div class="onboarding" id="onboarding">
-
-  <div class="onboard-box">
-
-    <div class="onboard-logo">🎋🤖</div>
-
-    <h1>Bamboo Bot 7.0.3</h1>
-
-    <p>
-      Dein persönlicher digitaler Assistent.
-      <br><br>
-      Organisieren. Planen. Erinnern.
-      <br>
-      Privat auf deinem Gerät.
-    </p>
-
-    <input
-      id="onboardingName"
-      placeholder="Wie heißt du?"
-    >
-
-    <button
-      id="finishOnboarding"
-      class="btn btn-primary btn-full">
-      Bamboo starten
-    </button>
-
-  </div>
-
-</div>
-
-
 
 <script>
-"use strict";
+const KEY='bamboo8_data_v1';
 
-const VERSION = "7.0.3";
-
-const STORAGE_KEY = "bamboo_bot_703_data";
-
-let state = {
-  version: VERSION,
-  settings: {
-    name: "",
-    theme: "system",
-    onboarded: false
+const defaultData={
+  tasks:[],
+  notes:[],
+  reminders:[],
+  files:[],
+  settings:{
+    name:'',
+    subtitle:'Dein persönlicher digitaler Assistent',
+    large:false,
+    contrast:false
   },
-  entries: [],
-  tasks: [],
-  notes: []
+  chat:[]
 };
 
-let plannerFilter = "all";
+let D=load();
 
-
-function $(id) {
-  return document.getElementById(id);
-}
-
-
-function uid() {
-  if (
-    window.crypto &&
-    typeof crypto.randomUUID === "function"
-  ) {
-    return crypto.randomUUID();
-  }
-
-  return (
-    Date.now().toString(36) +
-    Math.random().toString(36).slice(2)
-  );
-}
-
-
-function esc(value) {
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-
-function localDate(date = new Date()) {
-
-  const year = date.getFullYear();
-
-  const month =
-    String(date.getMonth() + 1).padStart(2,"0");
-
-  const day =
-    String(date.getDate()).padStart(2,"0");
-
-  return `${year}-${month}-${day}`;
-}
-
-
-function save() {
-
-  state.version = VERSION;
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(state)
-  );
-}
-
-
-function load() {
-
-  try {
-
-    const raw =
-      localStorage.getItem(STORAGE_KEY);
-
-    if (!raw) return;
-
-    const data = JSON.parse(raw);
-
-    if (data && typeof data === "object") {
-
-      state = {
-        version: VERSION,
-
-        settings: {
-          name:
-            data.settings?.name || "",
-
-          theme:
-            data.settings?.theme || "system",
-
-          onboarded:
-            Boolean(
-              data.settings?.onboarded
-            )
-        },
-
-        entries:
-          Array.isArray(data.entries)
-          ? data.entries
-          : [],
-
-        tasks:
-          Array.isArray(data.tasks)
-          ? data.tasks
-          : [],
-
-        notes:
-          Array.isArray(data.notes)
-          ? data.notes
-          : []
-      };
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Bamboo konnte lokale Daten nicht laden:",
-      error
-    );
+function load(){
+  try{
+    const x=JSON.parse(localStorage.getItem(KEY));
+    return x&&typeof x==='object'
+      ?{
+        ...structuredClone(defaultData),
+        ...x,
+        settings:{
+          ...defaultData.settings,
+          ...(x.settings||{})
+        }
+      }
+      :structuredClone(defaultData);
+  }catch(e){
+    return structuredClone(defaultData);
   }
 }
 
-
-function applyTheme() {
-
-  const theme =
-    state.settings.theme || "system";
-
-  let dark = false;
-
-  if (theme === "dark") {
-    dark = true;
+function save(){
+  try{
+    localStorage.setItem(KEY,JSON.stringify(D));
+    renderAll();
+  }catch(e){
+    toast('Speicher voll – bitte Backup erstellen oder große Dateien löschen.');
   }
-
-  if (
-    theme === "system" &&
-    window.matchMedia &&
-    window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches
-  ) {
-    dark = true;
-  }
-
-  document.body.classList.toggle(
-    "dark",
-    dark
-  );
 }
 
+function id(){
+  return Date.now()+Math.floor(Math.random()*9999);
+}
 
-function go(pageId) {
+function esc(s=''){
+  return String(s).replace(/[&<>"']/g,c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[c]));
+}
 
-  document
-    .querySelectorAll(".page")
-    .forEach(page => {
+function today(){
+  const d=new Date();
+  const o=d.getTimezoneOffset();
+  return new Date(d.getTime()-o*60000).toISOString().slice(0,10);
+}
 
-      page.classList.toggle(
-        "active",
-        page.id === pageId
-      );
-    });
+function fmtDate(d,t=''){
+  if(!d)return 'Ohne Datum';
 
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(button => {
+  const dt=new Date(d+'T'+(t||'12:00'));
 
-      button.classList.toggle(
-        "active",
-        button.dataset.go === pageId
-      );
-    });
+  return dt.toLocaleDateString('de-DE',{
+    weekday:'short',
+    day:'2-digit',
+    month:'2-digit',
+    year:'numeric'
+  })+(t?' · '+t:'');
+}
+
+function stamp(x){
+  return x.date
+    ?new Date(x.date+'T'+(x.time||'23:59')).getTime()
+    :Number.MAX_SAFE_INTEGER;
+}
+
+function toast(t){
+  const el=document.getElementById('toast');
+  el.textContent=t;
+  el.classList.add('show');
+
+  clearTimeout(toast._t);
+
+  toast._t=setTimeout(()=>{
+    el.classList.remove('show');
+  },2200);
+}
+
+function focusId(i){
+  setTimeout(()=>{
+    document.getElementById(i)?.focus();
+  },180);
+}
+
+function go(name){
+  document.querySelectorAll('.screen').forEach(x=>{
+    x.classList.remove('active');
+  });
+
+  document.getElementById(name)?.classList.add('active');
+
+  document.querySelectorAll('.navbtn').forEach(x=>{
+    x.classList.toggle('active',x.dataset.nav===name);
+  });
 
   window.scrollTo({
     top:0,
-    behavior:"smooth"
+    behavior:'smooth'
   });
 
-  render();
+  renderAll();
 }
 
-
-function openModal(id) {
-
-  $(id).classList.add("open");
+function openQuick(){
+  document.getElementById('quickModal').classList.add('open');
 }
 
-
-function closeModal(id) {
-
-  $(id).classList.remove("open");
+function closeQuick(){
+  document.getElementById('quickModal').classList.remove('open');
 }
 
+function openMenu(){
+  document.getElementById('menuModal').classList.add('open');
+}
 
-function formatDate(dateValue) {
+function closeMenu(){
+  document.getElementById('menuModal').classList.remove('open');
+}
 
-  if (!dateValue) {
-    return "Ohne Datum";
+function applySettings(){
+  document.body.classList.toggle('large',!!D.settings.large);
+  document.body.classList.toggle('highContrast',!!D.settings.contrast);
+
+  document.getElementById('subline').textContent=
+    D.settings.subtitle||defaultData.settings.subtitle;
+
+  document.getElementById('setName').value=
+    D.settings.name||'';
+
+  document.getElementById('setSubtitle').value=
+    D.settings.subtitle||defaultData.settings.subtitle;
+
+  document.getElementById('setLarge').checked=
+    !!D.settings.large;
+
+  document.getElementById('setContrast').checked=
+    !!D.settings.contrast;
+}
+
+function saveSettings(showToast=true){
+  D.settings.name=
+    document.getElementById('setName').value.trim();
+
+  D.settings.subtitle=
+    document.getElementById('setSubtitle').value.trim()
+    ||defaultData.settings.subtitle;
+
+  D.settings.large=
+    document.getElementById('setLarge').checked;
+
+  D.settings.contrast=
+    document.getElementById('setContrast').checked;
+
+  localStorage.setItem(KEY,JSON.stringify(D));
+
+  applySettings();
+
+  if(showToast){
+    toast('Einstellungen gespeichert ✓');
+  }
+}
+
+function addTask(){
+  const title=
+    document.getElementById('taskTitle').value.trim();
+
+  if(!title){
+    return toast('Bitte eine Aufgabe eingeben.');
   }
 
-  const date =
-    new Date(
-      dateValue + "T12:00:00"
-    );
+  D.tasks.push({
+    id:id(),
+    title,
+    date:taskDate.value,
+    time:taskTime.value,
+    priority:taskPriority.value,
+    category:taskCategory.value,
+    done:false,
+    fav:false,
+    created:Date.now(),
+    doneAt:null
+  });
 
-  return date.toLocaleDateString(
-    "de-DE",
-    {
-      weekday:"short",
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric"
-    }
-  );
+  taskTitle.value='';
+  taskDate.value='';
+  taskTime.value='';
+
+  save();
+  toast('Aufgabe gespeichert ✓');
 }
 
+function toggleTask(i){
+  const x=D.tasks.find(x=>x.id===i);
 
-function entryDateTime(entry) {
+  if(x){
+    x.done=!x.done;
+    x.doneAt=x.done?Date.now():null;
+    save();
+  }
+}
 
-  if (!entry.date) {
-    return new Date("2999-12-31");
+function deleteTask(i){
+  if(confirm('Aufgabe wirklich löschen?')){
+    D.tasks=D.tasks.filter(x=>x.id!==i);
+    save();
+  }
+}
+
+function favTask(i){
+  const x=D.tasks.find(x=>x.id===i);
+
+  if(x){
+    x.fav=!x.fav;
+    save();
+  }
+}
+
+function addNote(){
+  const title=noteTitle.value.trim();
+  const text=noteText.value.trim();
+
+  if(!title&&!text){
+    return toast('Bitte eine Notiz eingeben.');
   }
 
-  return new Date(
-    entry.date +
-    "T" +
-    (entry.time || "23:59")
-  );
+  D.notes.unshift({
+    id:id(),
+    title:title||'Notiz',
+    text,
+    fav:false,
+    created:Date.now()
+  });
+
+  noteTitle.value='';
+  noteText.value='';
+
+  save();
+  toast('Notiz gespeichert ✓');
 }
 
+function deleteNote(i){
+  if(confirm('Notiz wirklich löschen?')){
+    D.notes=D.notes.filter(x=>x.id!==i);
+    save();
+  }
+}
 
-function departureTime(entry) {
+function favNote(i){
+  const x=D.notes.find(x=>x.id===i);
 
-  if (
-    !entry.date ||
-    !entry.time ||
-    !entry.travel
-  ) {
-    return "";
+  if(x){
+    x.fav=!x.fav;
+    save();
+  }
+}
+
+function addReminder(){
+  const title=remTitle.value.trim();
+
+  if(!title){
+    return toast('Bitte eine Erinnerung eingeben.');
   }
 
-  const date =
-    entryDateTime(entry);
+  D.reminders.push({
+    id:id(),
+    title,
+    date:remDate.value,
+    time:remTime.value,
+    place:remPlace.value.trim(),
+    category:remCategory.value,
+    done:false,
+    fav:false,
+    created:Date.now(),
+    doneAt:null
+  });
 
-  date.setMinutes(
-    date.getMinutes() -
-    Number(entry.travel)
-  );
+  remTitle.value='';
+  remDate.value='';
+  remTime.value='';
+  remPlace.value='';
 
-  return date.toLocaleTimeString(
-    "de-DE",
-    {
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
+  save();
+  toast('Erinnerung gespeichert ✓');
 }
 
+function toggleRem(i){
+  const x=D.reminders.find(x=>x.id===i);
 
-function entryIcon(type) {
-
-  const icons = {
-    Termin:"📅",
-    Erinnerung:"🔔",
-    Medikament:"💊",
-    Einkauf:"🛒",
-    Telefonat:"☎️",
-    Familie:"👨‍👩‍👧",
-    Arbeit:"💼",
-    Haustier:"🐾"
-  };
-
-  return icons[type] || "📌";
+  if(x){
+    x.done=!x.done;
+    x.doneAt=x.done?Date.now():null;
+    save();
+  }
 }
 
+function deleteRem(i){
+  if(confirm('Erinnerung wirklich löschen?')){
+    D.reminders=D.reminders.filter(x=>x.id!==i);
+    save();
+  }
+}
 
-function renderEntry(entry) {
+function favRem(i){
+  const x=D.reminders.find(x=>x.id===i);
 
-  const departure =
-    departureTime(entry);
+  if(x){
+    x.fav=!x.fav;
+    save();
+  }
+}
 
-  return `
-    <div
-      class="item
-      ${entry.done ? "done" : ""}
-      priority-${esc(
-        entry.priority || "medium"
-      )}"
-    >
+function renderTasks(){
+  const a=[...D.tasks].sort(
+    (a,b)=>Number(a.done)-Number(b.done)||stamp(a)-stamp(b)
+  );
 
-      <div class="item-top">
+  taskList.innerHTML=a.length
+  ?a.map(x=>`
+    <div class="item ${x.done?'done':''}">
+      <button class="favstar ${x.fav?'on':''}" onclick="favTask(${x.id})">★</button>
 
-        <div class="item-title">
-          ${entryIcon(entry.type)}
-          ${esc(entry.title)}
-        </div>
-
-        <span class="badge">
-          ${esc(entry.type)}
-        </span>
-
+      <div class="title">
+        ${esc(x.title)}
+        <span class="badge">${esc(x.priority)}</span>
       </div>
 
       <div class="meta">
-
-        📅 ${esc(
-          formatDate(entry.date)
-        )}
-
-        ${
-          entry.time
-          ? ` · 🕒 ${esc(entry.time)} Uhr`
-          : ""
-        }
-
-        ${
-          entry.place
-          ? `<br>📍 ${esc(entry.place)}`
-          : ""
-        }
-
-        ${
-          entry.travel
-          ? `<br>🚗 Fahrzeit: ${esc(entry.travel)} Min.`
-          : ""
-        }
-
-        ${
-          departure
-          ? `<br><strong>⏰ Empfohlene Abfahrt:
-              ${esc(departure)} Uhr</strong>`
-          : ""
-        }
-
+        ${esc(x.category)} · ${fmtDate(x.date,x.time)}
       </div>
 
       <div class="actions">
-
-        <button
-          class="btn-secondary"
-          onclick="toggleEntry('${entry.id}')"
-        >
-          ${
-            entry.done
-            ? "↩ Wieder öffnen"
-            : "✓ Erledigt"
-          }
+        <button class="btn secondary" onclick="toggleTask(${x.id})">
+          ${x.done?'↩ Wieder öffnen':'✓ Erledigt'}
         </button>
 
-        <button
-          class="btn-danger"
-          onclick="deleteEntry('${entry.id}')"
-        >
-          🗑 Löschen
+        <button class="btn danger" onclick="deleteTask(${x.id})">
+          Löschen
         </button>
-
       </div>
-
     </div>
-  `;
+  `).join('')
+  :'<div class="empty">Noch keine Aufgaben.</div>';
 }
 
+function renderNotes(){
+  noteList.innerHTML=D.notes.length
+  ?D.notes.map(x=>`
+    <div class="item">
+      <button class="favstar ${x.fav?'on':''}" onclick="favNote(${x.id})">★</button>
 
-function renderTask(task) {
+      <div class="title">${esc(x.title)}</div>
 
+      <div class="meta">
+        ${new Date(x.created).toLocaleString('de-DE')}
+      </div>
+
+      <div class="noteText">${esc(x.text)}</div>
+
+      <div class="actions">
+        <button class="btn danger" onclick="deleteNote(${x.id})">
+          Löschen
+        </button>
+      </div>
+    </div>
+  `).join('')
+  :'<div class="empty">Noch keine Notizen.</div>';
+}
+
+function renderReminders(){
+  const a=[...D.reminders].sort(
+    (a,b)=>Number(a.done)-Number(b.done)||stamp(a)-stamp(b)
+  );
+
+  remList.innerHTML=a.length
+  ?a.map(x=>`
+    <div class="item ${x.done?'done':''}">
+      <button class="favstar ${x.fav?'on':''}" onclick="favRem(${x.id})">★</button>
+
+      <div class="title">
+        ${esc(x.title)}
+        <span class="badge">${esc(x.category)}</span>
+      </div>
+
+      <div class="meta">
+        ${fmtDate(x.date,x.time)}
+        ${x.place?'<br>📍 '+esc(x.place):''}
+      </div>
+
+      <div class="actions">
+        <button class="btn secondary" onclick="toggleRem(${x.id})">
+          ${x.done?'↩ Wieder öffnen':'✓ Erledigt'}
+        </button>
+
+        <button class="btn danger" onclick="deleteRem(${x.id})">
+          Löschen
+        </button>
+      </div>
+    </div>
+  `).join('')
+  :'<div class="empty">Noch keine Erinnerungen.</div>';
+}
+
+function plannerItems(){
+  return [
+    ...D.tasks
+      .filter(x=>!x.done)
+      .map(x=>({...x,type:'Aufgabe'})),
+
+    ...D.reminders
+      .filter(x=>!x.done)
+      .map(x=>({...x,type:'Erinnerung'}))
+  ].sort((a,b)=>stamp(a)-stamp(b));
+}
+
+function pRow(x){
   return `
-    <div
-      class="item
-      ${task.done ? "done" : ""}
-      priority-${esc(
-        task.priority || "medium"
-      )}"
-    >
+    <div class="item">
+      <div class="title">
+        ${x.type==='Aufgabe'?'✓':'🔔'} ${esc(x.title)}
+        <span class="badge">${esc(x.type)}</span>
+      </div>
 
-      <div class="item-top">
+      <div class="meta">
+        ${fmtDate(x.date,x.time)}
+        ${x.place?'<br>📍 '+esc(x.place):''}
+      </div>
+    </div>
+  `;
+}
 
-        <div class="item-title">
-          ✅ ${esc(task.title)}
-        </div>
+function renderPlanner(){
+  const all=plannerItems();
+  const t=today();
+  const tod=all.filter(x=>x.date===t);
+  const next=all.filter(x=>x.date!==t).slice(0,8);
 
+  pToday.textContent=tod.length;
+  pOpen.textContent=all.length;
+  pNotes.textContent=D.notes.length;
+
+  plannerToday.innerHTML=tod.length
+    ?tod.map(pRow).join('')
+    :'<div class="empty">Für heute ist nichts eingetragen.</div>';
+
+  plannerNext.innerHTML=next.length
+    ?next.map(pRow).join('')
+    :'<div class="empty">Keine weiteren offenen Termine.</div>';
+}
+
+function renderStats(){
+  const open=D.tasks.filter(x=>!x.done).length;
+  const done=D.tasks.filter(x=>x.done).length;
+  const rem=D.reminders.filter(x=>!x.done).length;
+
+  sTasks.textContent=open;
+  sDone.textContent=done;
+  sRem.textContent=rem;
+  sNotes.textContent=D.notes.length;
+
+  const total=open+done;
+  const rate=total?Math.round(done/total*100):0;
+
+  progressText.innerHTML=`
+    <p><b>${rate}%</b> deiner Aufgaben sind erledigt.</p>
+
+    <div style="height:14px;border-radius:99px;background:#0a2318;overflow:hidden">
+      <div style="height:100%;width:${rate}%;background:linear-gradient(90deg,#1ed777,#6bffad)"></div>
+    </div>
+  `;
+}
+
+function renderFavorites(){
+  const a=[
+    ...D.tasks
+      .filter(x=>x.fav)
+      .map(x=>({kind:'Aufgabe',...x})),
+
+    ...D.reminders
+      .filter(x=>x.fav)
+      .map(x=>({kind:'Erinnerung',...x})),
+
+    ...D.notes
+      .filter(x=>x.fav)
+      .map(x=>({kind:'Notiz',...x}))
+  ];
+
+  favList.innerHTML=a.length
+  ?a.map(x=>`
+    <div class="item">
+
+      <div class="title">
+        ⭐ ${esc(x.title)}
+        <span class="badge">${x.kind}</span>
+      </div>
+
+      <div class="meta">
         ${
-          task.date
-          ? `<span class="badge">
-               ${esc(formatDate(task.date))}
-             </span>`
-          : ""
+          x.kind==='Notiz'
+          ?new Date(x.created).toLocaleDateString('de-DE')
+          :fmtDate(x.date,x.time)
         }
-
       </div>
 
-      <div class="actions">
+      ${x.text?`<div class="noteText">${esc(x.text)}</div>`:''}
 
-        <button
-          class="btn-secondary"
-          onclick="toggleTask('${task.id}')"
-        >
-          ${
-            task.done
-            ? "↩ Wieder öffnen"
-            : "✓ Erledigt"
-          }
-        </button>
+    </div>
+  `).join('')
+  :'<div class="empty">Noch keine Favoriten. Tippe bei einem Eintrag auf ★.</div>';
+}
 
-        <button
-          class="btn-danger"
-          onclick="deleteTask('${task.id}')"
-        >
-          🗑 Löschen
-        </button>
+function renderHistory(){
+  const a=[
+    ...D.tasks
+      .filter(x=>x.done)
+      .map(x=>({kind:'Aufgabe',...x})),
 
+    ...D.reminders
+      .filter(x=>x.done)
+      .map(x=>({kind:'Erinnerung',...x}))
+  ].sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+
+  historyList.innerHTML=a.length
+  ?a.map(x=>`
+    <div class="item">
+
+      <div class="title">
+        ✓ ${esc(x.title)}
+        <span class="badge">${x.kind}</span>
+      </div>
+
+      <div class="meta">
+        Erledigt:
+        ${x.doneAt?new Date(x.doneAt).toLocaleString('de-DE'):'–'}
       </div>
 
     </div>
-  `;
+  `).join('')
+  :'<div class="empty">Noch kein Verlauf vorhanden.</div>';
 }
 
+function renderSearch(){
+  const q=(searchInput.value||'').trim().toLowerCase();
 
-function renderNote(note) {
+  if(!q){
+    searchResults.innerHTML=
+      '<div class="empty">Gib oben einen Suchbegriff ein.</div>';
+    return;
+  }
 
-  return `
-    <div class="item note-card">
+  const a=[
+    ...D.tasks.map(x=>({kind:'Aufgabe',...x})),
+    ...D.reminders.map(x=>({kind:'Erinnerung',...x})),
+    ...D.notes.map(x=>({kind:'Notiz',...x}))
+  ].filter(x=>
+    [x.title,x.text,x.category,x.place]
+    .join(' ')
+    .toLowerCase()
+    .includes(q)
+  );
 
-      <div class="item-top">
+  searchResults.innerHTML=a.length
+  ?a.map(x=>`
+    <div class="result">
 
-        <div class="item-title">
-          📝 ${esc(note.title)}
+      <b>${esc(x.title)}</b>
+      <span class="badge">${x.kind}</span>
+
+      <div class="meta">
+        ${
+          x.kind==='Notiz'
+          ?esc((x.text||'').slice(0,100))
+          :fmtDate(x.date,x.time)
+        }
+      </div>
+
+    </div>
+  `).join('')
+  :'<div class="empty">Keine Treffer.</div>';
+}
+
+async function addFile(){
+  const f=fileInput.files?.[0];
+
+  if(!f){
+    return toast('Bitte zuerst eine Datei auswählen.');
+  }
+
+  if(f.size>1500000){
+    return toast('Datei zu groß. Bitte unter 1,5 MB wählen.');
+  }
+
+  const data=await new Promise((res,rej)=>{
+    const r=new FileReader();
+
+    r.onload=()=>res(r.result);
+    r.onerror=rej;
+
+    r.readAsDataURL(f);
+  });
+
+  D.files.unshift({
+    id:id(),
+    name:f.name,
+    type:f.type||'Datei',
+    size:f.size,
+    data,
+    created:Date.now()
+  });
+
+  fileInput.value='';
+
+  save();
+  toast('Datei lokal gespeichert ✓');
+}
+
+function deleteFile(i){
+  if(confirm('Datei wirklich löschen?')){
+    D.files=D.files.filter(x=>x.id!==i);
+    save();
+  }
+}
+
+function downloadFile(i){
+  const x=D.files.find(x=>x.id===i);
+
+  if(!x)return;
+
+  const a=document.createElement('a');
+
+  a.href=x.data;
+  a.download=x.name;
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function renderFiles(){
+  fileList.innerHTML=D.files.length
+  ?D.files.map(x=>`
+    <div class="item filechip">
+
+      <div class="name">
+        <b>📎 ${esc(x.name)}</b>
+
+        <div class="meta">
+          ${Math.round(x.size/1024)} KB ·
+          ${new Date(x.created).toLocaleDateString('de-DE')}
         </div>
-
-        <span class="badge">
-          ${esc(
-            new Date(
-              note.created
-            ).toLocaleDateString("de-DE")
-          )}
-        </span>
-
-      </div>
-
-      <div class="note-text">
-        ${esc(note.text)}
       </div>
 
       <div class="actions">
-
-        <button
-          class="btn-danger"
-          onclick="deleteNote('${note.id}')"
-        >
-          🗑 Löschen
+        <button class="btn secondary" onclick="downloadFile(${x.id})">
+          Öffnen
         </button>
 
+        <button class="btn danger" onclick="deleteFile(${x.id})">
+          ×
+        </button>
       </div>
 
     </div>
-  `;
+  `).join('')
+  :'<div class="empty">Noch keine Dateien gespeichert.</div>';
 }
 
+function addMsg(t,who){
+  const d=document.createElement('div');
 
-function renderHome() {
+  d.className='msg '+who;
+  d.textContent=t;
 
-  const now = new Date();
-
-  const today = localDate(now);
-
-  const name =
-    state.settings.name;
-
-  $("greeting").textContent =
-    name
-    ? `Hallo, ${name} 👋`
-    : "Hallo 👋";
-
-  $("todayDate").textContent =
-    now.toLocaleDateString(
-      "de-DE",
-      {
-        weekday:"long",
-        day:"2-digit",
-        month:"long",
-        year:"numeric"
-      }
-    );
-
-  const todayEntries =
-    state.entries
-      .filter(
-        entry =>
-          !entry.done &&
-          entry.date === today
-      )
-      .sort(
-        (a,b) =>
-          entryDateTime(a) -
-          entryDateTime(b)
-      );
-
-  $("todayCount").textContent =
-    todayEntries.length;
-
-  $("taskCount").textContent =
-    state.tasks.filter(
-      task => !task.done
-    ).length;
-
-  $("noteCount").textContent =
-    state.notes.length;
-
-  $("todayList").innerHTML =
-    todayEntries.length
-    ? todayEntries
-        .map(renderEntry)
-        .join("")
-    : `
-      <div class="empty">
-        🎋 Für heute ist nichts eingetragen.
-      </div>
-    `;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
 }
 
+function assistantReply(q){
+  const l=q.toLowerCase();
+  const all=plannerItems();
+  const t=today();
+  const tod=all.filter(x=>x.date===t);
 
-function plannerEntries() {
-
-  const query =
-    $("plannerSearch").value
-      .trim()
-      .toLowerCase();
-
-  const today =
-    localDate();
-
-  const end =
-    new Date();
-
-  end.setDate(
-    end.getDate() + 7
-  );
-
-  const endDate =
-    localDate(end);
-
-  return state.entries
-
-    .filter(entry => {
-
-      const text = [
-        entry.title,
-        entry.type,
-        entry.place,
-        entry.date
-      ]
-      .join(" ")
-      .toLowerCase();
-
-      if (
-        query &&
-        !text.includes(query)
-      ) {
-        return false;
-      }
-
-      if (
-        plannerFilter === "today"
-      ) {
-        return entry.date === today;
-      }
-
-      if (
-        plannerFilter === "week"
-      ) {
-        return (
-          entry.date >= today &&
-          entry.date <= endDate
-        );
-      }
-
-      if (
-        plannerFilter === "open"
-      ) {
-        return !entry.done;
-      }
-
-      if (
-        plannerFilter === "done"
-      ) {
-        return entry.done;
-      }
-
-      return true;
-    })
-
-    .sort(
-      (a,b) => {
-
-        if (
-          Boolean(a.done) !==
-          Boolean(b.done)
-        ) {
-          return (
-            Number(a.done) -
-            Number(b.done)
-          );
-        }
-
-        return (
-          entryDateTime(a) -
-          entryDateTime(b)
-        );
-      }
-    );
-}
-
-
-function renderPlanner() {
-
-  const entries =
-    plannerEntries();
-
-  $("plannerList").innerHTML =
-    entries.length
-    ? entries
-        .map(renderEntry)
-        .join("")
-    : `
-      <div class="empty">
-        Keine passenden Einträge gefunden.
-      </div>
-    `;
-}
-
-
-function renderTasks() {
-
-  const query =
-    $("taskSearch").value
-      .trim()
-      .toLowerCase();
-
-  const tasks =
-    [...state.tasks]
-
-      .filter(task =>
-        task.title
-          .toLowerCase()
-          .includes(query)
-      )
-
-      .sort(
-        (a,b) => {
-
-          if (
-            Boolean(a.done) !==
-            Boolean(b.done)
-          ) {
-            return (
-              Number(a.done) -
-              Number(b.done)
-            );
-          }
-
-          return (
-            (a.date || "9999") >
-            (b.date || "9999")
-            ? 1
-            : -1
-          );
-        }
-      );
-
-  $("taskList").innerHTML =
-    tasks.length
-    ? tasks
-        .map(renderTask)
-        .join("")
-    : `
-      <div class="empty">
-        Noch keine Aufgaben vorhanden.
-      </div>
-    `;
-}
-
-
-function renderNotes() {
-
-  const query =
-    $("noteSearch").value
-      .trim()
-      .toLowerCase();
-
-  const notes =
-    [...state.notes]
-
-      .filter(note =>
-        (
-          note.title +
-          " " +
-          note.text
-        )
-        .toLowerCase()
-        .includes(query)
-      )
-
-      .sort(
-        (a,b) =>
-          b.created - a.created
-      );
-
-  $("noteList").innerHTML =
-    notes.length
-    ? notes
-        .map(renderNote)
-        .join("")
-    : `
-      <div class="empty">
-        Noch keine Notizen vorhanden.
-      </div>
-    `;
-}
-
-
-function renderSettings() {
-
-  $("userName").value =
-    state.settings.name || "";
-
-  $("themeSelect").value =
-    state.settings.theme || "system";
-}
-
-
-function render() {
-
-  renderHome();
-  renderPlanner();
-  renderTasks();
-  renderNotes();
-  renderSettings();
-}
-
-
-window.toggleEntry =
-function(id) {
-
-  const entry =
-    state.entries.find(
-      item => item.id === id
-    );
-
-  if (!entry) return;
-
-  entry.done = !entry.done;
-
-  save();
-  render();
-};
-
-
-window.deleteEntry =
-function(id) {
-
-  const entry =
-    state.entries.find(
-      item => item.id === id
-    );
-
-  if (!entry) return;
-
-  if (
-    !confirm(
-      `„${entry.title}“ wirklich löschen?`
-    )
-  ) {
-    return;
+  if(l.includes('heute')){
+    return tod.length
+      ?'Heute stehen an:\n'+
+        tod.map(x=>'• '+x.title+(x.time?' um '+x.time:'')).join('\n')
+      :'Für heute ist aktuell nichts eingetragen.';
   }
 
-  state.entries =
-    state.entries.filter(
-      item => item.id !== id
-    );
+  if(l.includes('nächst')){
+    const n=all.find(x=>x.date)||all[0];
 
-  save();
-  render();
-};
-
-
-window.toggleTask =
-function(id) {
-
-  const task =
-    state.tasks.find(
-      item => item.id === id
-    );
-
-  if (!task) return;
-
-  task.done = !task.done;
-
-  save();
-  render();
-};
-
-
-window.deleteTask =
-function(id) {
-
-  const task =
-    state.tasks.find(
-      item => item.id === id
-    );
-
-  if (!task) return;
-
-  if (
-    !confirm(
-      `„${task.title}“ wirklich löschen?`
-    )
-  ) {
-    return;
+    return n
+      ?'Als Nächstes: '+n.title+' – '+fmtDate(n.date,n.time)+'.'
+      :'Es gibt aktuell keine offenen Termine oder Aufgaben.';
   }
 
-  state.tasks =
-    state.tasks.filter(
-      item => item.id !== id
-    );
-
-  save();
-  render();
-};
-
-
-window.deleteNote =
-function(id) {
-
-  const note =
-    state.notes.find(
-      item => item.id === id
-    );
-
-  if (!note) return;
-
-  if (
-    !confirm(
-      `Notiz „${note.title}“ wirklich löschen?`
-    )
-  ) {
-    return;
+  if(l.includes('wie viele')||l.includes('offen')){
+    return `Du hast ${D.tasks.filter(x=>!x.done).length} offene Aufgaben, ${D.reminders.filter(x=>!x.done).length} offene Erinnerungen und ${D.notes.length} Notizen.`;
   }
 
-  state.notes =
-    state.notes.filter(
-      item => item.id !== id
-    );
+  if(l.includes('notiz')){
+    return D.notes.length
+      ?'Deine letzte Notiz heißt „'+D.notes[0].title+'“.'
+      :'Du hast noch keine Notizen.';
+  }
 
-  save();
-  render();
-};
+  if(l.includes('hallo')||l.includes('hi')){
+    return 'Hallo'+(D.settings.name?', '+D.settings.name:'')+'! 👋 Was möchtest du organisieren?';
+  }
 
-
-function prepareEntryModal() {
-
-  $("entryTitle").value = "";
-
-  $("entryDate").value =
-    localDate();
-
-  $("entryTime").value = "";
-
-  $("entryPlace").value = "";
-
-  $("entryTravel").value = "";
-
-  $("entryPriority").value =
-    "medium";
-
-  $("entryType").value =
-    "Termin";
-
-  openModal("entryModal");
+  return 'Ich kann in dieser Testversion deine lokal gespeicherten Aufgaben, Erinnerungen und Notizen zusammenfassen. Frag mich z. B. nach „heute“, „als Nächstes“ oder „offenen Aufgaben“.';
 }
 
+function sendChat(){
+  const t=chatInput.value.trim();
 
-function prepareTaskModal() {
+  if(!t)return;
 
-  $("taskTitleInput").value = "";
+  addMsg(t,'user');
 
-  $("taskDateInput").value =
-    localDate();
+  chatInput.value='';
 
-  $("taskPriorityInput").value =
-    "medium";
-
-  openModal("taskModal");
+  setTimeout(()=>{
+    addMsg(assistantReply(t),'bot');
+  },180);
 }
 
-
-function prepareNoteModal() {
-
-  $("noteTitleInput").value = "";
-
-  $("noteTextInput").value = "";
-
-  openModal("noteModal");
+function quickAsk(t){
+  chatInput.value=t;
+  sendChat();
 }
 
+chatInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    sendChat();
+  }
+});
 
-$("saveEntry")
-.addEventListener(
-  "click",
-  () => {
+function exportData(){
+  const blob=new Blob([
+    JSON.stringify({
+      version:'8.0',
+      exported:new Date().toISOString(),
+      data:D
+    },null,2)
+  ],{
+    type:'application/json'
+  });
 
-    const title =
-      $("entryTitle")
-        .value
-        .trim();
+  const a=document.createElement('a');
 
-    const date =
-      $("entryDate").value;
+  a.href=URL.createObjectURL(blob);
+  a.download='bamboo-bot-8-backup.json';
 
-    if (!title) {
-      alert(
-        "Bitte gib einen Titel ein."
-      );
-      return;
+  document.body.appendChild(a);
+  a.click();
+
+  setTimeout(()=>{
+    URL.revokeObjectURL(a.href);
+    a.remove();
+  },500);
+
+  toast('Backup erstellt ✓');
+}
+
+async function importData(e){
+  const f=e.target.files?.[0];
+
+  if(!f)return;
+
+  try{
+    const j=JSON.parse(await f.text());
+    const x=j.data||j;
+
+    if(
+      !x||
+      !Array.isArray(x.tasks)||
+      !Array.isArray(x.notes)||
+      !Array.isArray(x.reminders)
+    ){
+      throw new Error();
     }
 
-    if (!date) {
-      alert(
-        "Bitte wähle ein Datum."
-      );
-      return;
-    }
-
-    state.entries.push({
-      id:uid(),
-      title,
-      type:$("entryType").value,
-      date,
-      time:$("entryTime").value,
-      place:
-        $("entryPlace")
-          .value
-          .trim(),
-      travel:
-        $("entryTravel").value,
-      priority:
-        $("entryPriority").value,
-      done:false,
-      created:Date.now()
-    });
-
-    save();
-
-    closeModal("entryModal");
-
-    render();
-
-    go("planner");
-  }
-);
-
-
-$("saveTask")
-.addEventListener(
-  "click",
-  () => {
-
-    const title =
-      $("taskTitleInput")
-        .value
-        .trim();
-
-    if (!title) {
-      alert(
-        "Bitte gib eine Aufgabe ein."
-      );
-      return;
-    }
-
-    state.tasks.push({
-      id:uid(),
-      title,
-      date:
-        $("taskDateInput").value,
-      priority:
-        $("taskPriorityInput").value,
-      done:false,
-      created:Date.now()
-    });
-
-    save();
-
-    closeModal("taskModal");
-
-    render();
-
-    go("tasks");
-  }
-);
-
-
-$("saveNote")
-.addEventListener(
-  "click",
-  () => {
-
-    const title =
-      $("noteTitleInput")
-        .value
-        .trim();
-
-    const text =
-      $("noteTextInput")
-        .value
-        .trim();
-
-    if (
-      !title &&
-      !text
-    ) {
-      alert(
-        "Bitte gib eine Notiz ein."
-      );
-      return;
-    }
-
-    state.notes.push({
-      id:uid(),
-      title:
-        title || "Notiz",
-      text,
-      created:Date.now()
-    });
-
-    save();
-
-    closeModal("noteModal");
-
-    render();
-
-    go("notes");
-  }
-);
-
-
-$("saveSettings")
-.addEventListener(
-  "click",
-  () => {
-
-    state.settings.name =
-      $("userName")
-        .value
-        .trim();
-
-    state.settings.theme =
-      $("themeSelect").value;
-
-    save();
-
-    applyTheme();
-
-    render();
-
-    alert(
-      "Einstellungen gespeichert."
-    );
-  }
-);
-
-
-function assistantReply(text) {
-
-  const query =
-    text
-      .trim()
-      .toLowerCase();
-
-  const today =
-    localDate();
-
-  const todayEntries =
-    state.entries.filter(
-      entry =>
-        !entry.done &&
-        entry.date === today
-    );
-
-  const openEntries =
-    state.entries.filter(
-      entry => !entry.done
-    );
-
-  const openTasks =
-    state.tasks.filter(
-      task => !task.done
-    );
-
-  if (
-    query.includes("hallo") ||
-    query === "hi" ||
-    query === "hey"
-  ) {
-    return state.settings.name
-      ? `Hallo ${state.settings.name}! 🎋 Was möchtest du wissen?`
-      : "Hallo! 🎋 Was möchtest du wissen?";
-  }
-
-  if (
-    query.includes("heute")
-  ) {
-
-    if (!todayEntries.length) {
-      return "Für heute ist aktuell nichts eingetragen. 🎋";
-    }
-
-    return (
-      `Heute hast du ${todayEntries.length} offene Einträge:\n\n` +
-      todayEntries
-        .map(entry =>
-          `• ${entry.time ? entry.time + " Uhr – " : ""}${entry.title}`
-        )
-        .join("\n")
-    );
-  }
-
-  if (
-    query.includes("aufgabe")
-  ) {
-    return (
-      `Du hast aktuell ${openTasks.length} offene Aufgaben.`
-    );
-  }
-
-  if (
-    query.includes("termin") ||
-    query.includes("erinner")
-  ) {
-    return (
-      `Du hast aktuell ${openEntries.length} offene Termine und Erinnerungen.`
-    );
-  }
-
-  if (
-    query.includes("notiz")
-  ) {
-    return (
-      `Du hast ${state.notes.length} gespeicherte Notizen.`
-    );
-  }
-
-  if (
-    query.includes("version")
-  ) {
-    return (
-      `Du nutzt Bamboo Bot ${VERSION}.`
-    );
-  }
-
-  return (
-    "Ich kann in dieser kostenlosen lokalen Testversion deine Termine, Aufgaben und Notizen auswerten. Frag mich zum Beispiel: „Was habe ich heute?“"
-  );
-}
-
-
-function addChatMessage(
-  text,
-  who
-) {
-
-  const message =
-    document.createElement("div");
-
-  message.className =
-    `message ${who}`;
-
-  message.textContent =
-    text;
-
-  $("chat")
-    .appendChild(message);
-
-  $("chat").scrollTop =
-    $("chat").scrollHeight;
-}
-
-
-function sendChat() {
-
-  const input =
-    $("messageInput");
-
-  const text =
-    input.value.trim();
-
-  if (!text) return;
-
-  addChatMessage(
-    text,
-    "user"
-  );
-
-  input.value = "";
-
-  setTimeout(
-    () => {
-
-      addChatMessage(
-        assistantReply(text),
-        "bot"
-      );
-
-    },
-    200
-  );
-}
-
-
-$("sendMessage")
-.addEventListener(
-  "click",
-  sendChat
-);
-
-
-$("messageInput")
-.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendChat();
-    }
-  }
-);
-
-
-$("exportData")
-.addEventListener(
-  "click",
-  () => {
-
-    const data =
-      JSON.stringify(
-        state,
-        null,
-        2
-      );
-
-    const blob =
-      new Blob(
-        [data],
-        {
-          type:"application/json"
-        }
-      );
-
-    const url =
-      URL.createObjectURL(blob);
-
-    const link =
-      document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-      `bamboo-bot-${VERSION}-backup.json`;
-
-    link.click();
-
-    setTimeout(
-      () =>
-        URL.revokeObjectURL(url),
-      1000
-    );
-  }
-);
-
-
-$("importButton")
-.addEventListener(
-  "click",
-  () =>
-    $("importFile").click()
-);
-
-
-$("importFile")
-.addEventListener(
-  "change",
-  async event => {
-
-    try {
-
-      const file =
-        event.target.files[0];
-
-      if (!file) return;
-
-      const text =
-        await file.text();
-
-      const data =
-        JSON.parse(text);
-
-      if (
-        !data ||
-        typeof data !== "object"
-      ) {
-        throw new Error();
-      }
-
-      state = {
-        version:VERSION,
-
-        settings:{
-          name:
-            data.settings?.name || "",
-
-          theme:
-            data.settings?.theme || "system",
-
-          onboarded:true
-        },
-
-        entries:
-          Array.isArray(data.entries)
-          ? data.entries
-          : [],
-
-        tasks:
-          Array.isArray(data.tasks)
-          ? data.tasks
-          : [],
-
-        notes:
-          Array.isArray(data.notes)
-          ? data.notes
-          : []
-      };
-
-      save();
-
-      applyTheme();
-
-      render();
-
-      alert(
-        "Bamboo-Daten wurden erfolgreich importiert."
-      );
-
-    } catch (error) {
-
-      alert(
-        "Die Sicherungsdatei konnte nicht gelesen werden."
-      );
-    }
-
-    event.target.value = "";
-  }
-);
-
-
-$("testStorage")
-.addEventListener(
-  "click",
-  () => {
-
-    const testKey =
-      "bamboo_storage_test";
-
-    try {
-
-      localStorage.setItem(
-        testKey,
-        "PASS"
-      );
-
-      const result =
-        localStorage.getItem(
-          testKey
-        );
-
-      localStorage.removeItem(
-        testKey
-      );
-
-      if (
-        result === "PASS"
-      ) {
-        alert(
-          "PASS ✅\n\nDer lokale Speicher funktioniert."
-        );
-      } else {
-        alert(
-          "FAIL ❌\n\nDer lokale Speicher funktioniert nicht korrekt."
-        );
-      }
-
-    } catch (error) {
-
-      alert(
-        "FAIL ❌\n\nDer lokale Speicher ist nicht verfügbar."
-      );
-    }
-  }
-);
-
-
-$("clearAll")
-.addEventListener(
-  "click",
-  () => {
-
-    const first =
-      confirm(
-        "Wirklich ALLE Bamboo-Daten auf diesem Gerät löschen?"
-      );
-
-    if (!first) return;
-
-    const second =
-      confirm(
-        "Letzte Bestätigung:\n\nTermine, Aufgaben, Notizen und Einstellungen werden dauerhaft gelöscht."
-      );
-
-    if (!second) return;
-
-    localStorage.removeItem(
-      STORAGE_KEY
-    );
-
-    state = {
-      version:VERSION,
-
+    D={
+      ...structuredClone(defaultData),
+      ...x,
       settings:{
-        name:"",
-        theme:"system",
-        onboarded:false
-      },
-
-      entries:[],
-      tasks:[],
-      notes:[]
+        ...defaultData.settings,
+        ...(x.settings||{})
+      }
     };
 
-    applyTheme();
+    localStorage.setItem(KEY,JSON.stringify(D));
 
-    render();
+    applySettings();
+    renderAll();
 
-    $("onboarding")
-      .classList.add("open");
+    toast('Backup importiert ✓');
+  }catch(err){
+    alert('Diese Backup-Datei ist ungültig.');
   }
-);
 
-
-$("finishOnboarding")
-.addEventListener(
-  "click",
-  () => {
-
-    state.settings.name =
-      $("onboardingName")
-        .value
-        .trim();
-
-    state.settings.onboarded =
-      true;
-
-    save();
-
-    $("onboarding")
-      .classList.remove("open");
-
-    render();
-  }
-);
-
-
-document
-.querySelectorAll("[data-go]")
-.forEach(
-  button => {
-
-    button.addEventListener(
-      "click",
-      () =>
-        go(button.dataset.go)
-    );
-  }
-);
-
-
-document
-.querySelectorAll("[data-close]")
-.forEach(
-  button => {
-
-    button.addEventListener(
-      "click",
-      () =>
-        closeModal(
-          button.dataset.close
-        )
-    );
-  }
-);
-
-
-document
-.querySelectorAll(".modal")
-.forEach(
-  modal => {
-
-    modal.addEventListener(
-      "click",
-      event => {
-
-        if (
-          event.target === modal
-        ) {
-          modal.classList.remove(
-            "open"
-          );
-        }
-      }
-    );
-  }
-);
-
-
-document
-.querySelectorAll("[data-filter]")
-.forEach(
-  button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        plannerFilter =
-          button.dataset.filter;
-
-        document
-          .querySelectorAll(
-            "[data-filter]"
-          )
-          .forEach(
-            item =>
-              item.classList.remove(
-                "active"
-              )
-          );
-
-        button.classList.add(
-          "active"
-        );
-
-        renderPlanner();
-      }
-    );
-  }
-);
-
-
-$("plannerSearch")
-.addEventListener(
-  "input",
-  renderPlanner
-);
-
-
-$("taskSearch")
-.addEventListener(
-  "input",
-  renderTasks
-);
-
-
-$("noteSearch")
-.addEventListener(
-  "input",
-  renderNotes
-);
-
-
-$("fab")
-.addEventListener(
-  "click",
-  prepareEntryModal
-);
-
-
-$("homeAdd")
-.addEventListener(
-  "click",
-  prepareEntryModal
-);
-
-
-$("plannerAdd")
-.addEventListener(
-  "click",
-  prepareEntryModal
-);
-
-
-$("taskAdd")
-.addEventListener(
-  "click",
-  prepareTaskModal
-);
-
-
-$("noteAdd")
-.addEventListener(
-  "click",
-  prepareNoteModal
-);
-
-
-load();
-
-applyTheme();
-
-render();
-
-$("entryDate").value =
-  localDate();
-
-$("taskDateInput").value =
-  localDate();
-
-
-if (
-  !state.settings.onboarded
-) {
-  $("onboarding")
-    .classList.add("open");
+  e.target.value='';
 }
 
+function clearAll(){
+  if(!confirm('Wirklich ALLE Bamboo-Daten auf diesem Gerät löschen?')){
+    return;
+  }
 
-if (
-  window.matchMedia
-) {
+  if(!confirm('Letzte Bestätigung: Daten können ohne Backup nicht wiederhergestellt werden.')){
+    return;
+  }
 
-  window
-    .matchMedia(
-      "(prefers-color-scheme: dark)"
-    )
-    .addEventListener?.(
-      "change",
-      () => {
+  D=structuredClone(defaultData);
 
-        if (
-          state.settings.theme ===
-          "system"
-        ) {
-          applyTheme();
-        }
-      }
-    );
+  localStorage.removeItem(KEY);
+
+  applySettings();
+  renderAll();
+
+  toast('Alle Daten gelöscht.');
 }
 
+function renderAll(){
+  renderTasks();
+  renderNotes();
+  renderReminders();
+  renderPlanner();
+  renderStats();
+  renderFavorites();
+  renderHistory();
+  renderFiles();
 
-console.log(
-  `Bamboo Bot ${VERSION} gestartet.`
-);
+  if(document.getElementById('search')?.classList.contains('active')){
+    renderSearch();
+  }
+}
+
+applySettings();
+renderAll();
 </script>
-
 </body>
 </html>
